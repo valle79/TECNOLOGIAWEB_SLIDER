@@ -150,7 +150,3 @@ Cada slide en `app.py` sigue esta estructura:
 ```
 
 La función `get_slides_data()` valida que todos los campos requeridos estén presentes antes de renderizar.
-
-## Licencia
-
-Este proyecto es de código abierto y está disponible bajo la licencia MIT.
