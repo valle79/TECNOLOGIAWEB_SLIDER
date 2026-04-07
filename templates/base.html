@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}Vinos del Valle - Venta de Vinos Premium{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ url_for('main.index') }}" class="flex items-center">
+                        <span class="text-2xl font-bold text-red-800">🍷 Vinos del Valle</span>
+                    </a>
+                    <div class="hidden md:ml-10 md:flex md:space-x-8">
+                        <a href="{{ url_for('main.index') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">Inicio</a>
+                        <a href="{{ url_for('wine.catalog') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">Catálogo</a>
+                        <a href="{{ url_for('main.about') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">Nosotros</a>
+                        <a href="{{ url_for('main.contact') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">Contacto</a>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    {% if is_logged_in %}
+                        {% if is_admin %}
+                        <a href="{{ url_for('admin.dashboard') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">
+                            Admin
+                        </a>
+                        {% endif %}
+                        <a href="{{ url_for('order.my_orders') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">
+                            Mis Pedidos
+                        </a>
+                        <span class="text-gray-700 text-sm">{{ user_name }}</span>
+                        <a href="{{ url_for('auth.logout') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">
+                            Salir
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="text-gray-700 hover:text-red-800 px-3 py-2 text-sm font-medium">
+                            Iniciar Sesión
+                        </a>
+                        <a href="{{ url_for('auth.register') }}" class="bg-red-800 text-white px-4 py-2 rounded-lg hover:bg-red-900 text-sm font-medium">
+                            Registrarse
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{{ url_for('cart.view_cart') }}" class="relative text-gray-700 hover:text-red-800">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        {% if cart_count > 0 %}
+                        <span class="absolute -top-2 -right-2 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                            {{ cart_count }}
+                        </span>
+                        {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+                {% for category, message in messages %}
+                    <div class="rounded-md p-4 mb-4 {% if category == 'error' %}bg-red-50 text-red-800{% elif category == 'success' %}bg-green-50 text-green-800{% elif category == 'warning' %}bg-yellow-50 text-yellow-800{% else %}bg-blue-50 text-blue-800{% endif %}">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">Vinos del Valle</h3>
+                    <p class="text-gray-400">Vinos premium de Perú para el mundo</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Enlaces</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ url_for('wine.catalog') }}" class="hover:text-white">Catálogo</a></li>
+                        <li><a href="{{ url_for('main.about') }}" class="hover:text-white">Nosotros</a></li>
+                        <li><a href="{{ url_for('main.contact') }}" class="hover:text-white">Contacto</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Cuenta</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="{{ url_for('auth.login') }}" class="hover:text-white">Iniciar Sesión</a></li>
+                        <li><a href="{{ url_for('auth.register') }}" class="hover:text-white">Registrarse</a></li>
+                        <li><a href="{{ url_for('order.my_orders') }}" class="hover:text-white">Mis Pedidos</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Contacto</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>📧 info@vinosdelvalle.com</li>
+                        <li>📱 +51 999 888 777</li>
+                        <li>📍 Lima, Perú</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Vinos del Valle. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

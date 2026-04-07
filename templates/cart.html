@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Carrito de Compras - Vinos del Valle{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">Carrito de Compras</h1>
+    
+    {% if cart_items %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-lg shadow">
+                {% for item in cart_items %}
+                <div class="p-6 border-b last:border-b-0" data-wine-id="{{ item.wine_id }}">
+                    <div class="flex items-center space-x-4">
+                        <img src="{{ item.image_url or url_for('static', filename='images/wines/default.jpg') }}" 
+                             alt="{{ item.name }}" 
+                             class="w-24 h-24 object-cover rounded">
+                        
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-900">{{ item.name }}</h3>
+                            <p class="text-gray-600">S/ {{ "%.2f"|format(item.price) }} c/u</p>
+                            <p class="text-sm text-gray-500">Stock disponible: {{ item.stock }}</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm text-gray-600">Cantidad:</label>
+                                <input type="number" 
+                                       min="1" 
+                                       max="{{ item.stock }}"
+                                       value="{{ item.quantity }}"
+                                       data-wine-id="{{ item.wine_id }}"
+                                       class="quantity-input w-20 border-gray-300 rounded">
+                            </div>
+                            
+                            <div class="text-right">
+                                <p class="text-lg font-bold text-red-800">
+                                    S/ {{ "%.2f"|format(item.price * item.quantity) }}
+                                </p>
+                            </div>
+                            
+                            <button type="button" 
+                                    data-wine-id="{{ item.wine_id }}"
+                                    class="remove-item-btn text-red-600 hover:text-red-800">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-lg shadow p-6 sticky top-24">
+                <h2 class="text-2xl font-bold mb-4">Resumen del Pedido</h2>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Subtotal:</span>
+                        <span class="font-semibold cart-total">S/ {{ "%.2f"|format(cart_total) }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>Envío:</span>
+                        <span>Calculado en checkout</span>
+                    </div>
+                </div>
+                
+                <div class="border-t pt-4 mb-6">
+                    <div class="flex justify-between text-lg font-bold">
+                        <span>Total:</span>
+                        <span class="text-red-800 cart-total">S/ {{ "%.2f"|format(cart_total) }}</span>
+                    </div>
+                </div>
+                
+                <a href="{{ url_for('order.checkout') }}" 
+                   class="block w-full bg-red-800 text-white text-center py-3 rounded-lg hover:bg-red-900 font-semibold mb-3">
+                    Proceder al Checkout
+                </a>
+                
+                <a href="{{ url_for('wine.catalog') }}" 
+                   class="block w-full bg-gray-200 text-gray-800 text-center py-3 rounded-lg hover:bg-gray-300">
+                    Continuar Comprando
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-16">
+        <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
+        <p class="text-gray-600 mb-8">Agrega algunos vinos para comenzar tu pedido</p>
+        <a href="{{ url_for('wine.catalog') }}" 
+           class="inline-block bg-red-800 text-white px-8 py-3 rounded-lg hover:bg-red-900 font-semibold">
+            Ver Catálogo
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

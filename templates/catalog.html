@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Catálogo de Vinos - Vinos del Valle{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">Catálogo de Vinos</h1>
+    
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Filters Sidebar -->
+        <div class="lg:col-span-1">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h2 class="text-xl font-bold mb-4">Filtros</h2>
+                
+                <form method="GET" action="{{ url_for('wine.catalog') }}">
+                    <!-- Wine Type Filter -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Vino</label>
+                        <select name="type" class="w-full border-gray-300 rounded-lg">
+                            <option value="">Todos</option>
+                            {% for type in wine_types %}
+                            <option value="{{ type }}" {% if current_filters.get('wine_type') == type %}selected{% endif %}>
+                                {{ type }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Country Filter -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
+                        <select name="country" class="w-full border-gray-300 rounded-lg">
+                            <option value="">Todos</option>
+                            {% for country in countries %}
+                            <option value="{{ country }}" {% if current_filters.get('country') == country %}selected{% endif %}>
+                                {{ country }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Rango de Precio</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <input type="number" name="min_price" placeholder="Min" 
+                                   value="{{ current_filters.get('min_price', '') }}"
+                                   class="border-gray-300 rounded-lg">
+                            <input type="number" name="max_price" placeholder="Max"
+                                   value="{{ current_filters.get('max_price', '') }}"
+                                   class="border-gray-300 rounded-lg">
+                        </div>
+                    </div>
+                    
+                    <!-- Search -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                        <input type="text" name="search" placeholder="Nombre o descripción"
+                               value="{{ current_filters.get('search', '') }}"
+                               class="w-full border-gray-300 rounded-lg">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-red-800 text-white py-2 rounded-lg hover:bg-red-900">
+                        Aplicar Filtros
+                    </button>
+                    <a href="{{ url_for('wine.catalog') }}" class="block text-center mt-2 text-gray-600 hover:text-gray-900">
+                        Limpiar Filtros
+                    </a>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Wine Grid -->
+        <div class="lg:col-span-3">
+            {% if wines %}
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for wine in wines %}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                    <div class="h-48 overflow-hidden">
+                        <img src="{{ wine.image_url or url_for('static', filename='images/wines/default.jpg') }}" 
+                             alt="{{ wine.name }}" 
+                             class="w-full h-full object-cover hover:scale-110 transition duration-300">
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-gray-900">{{ wine.name }}</h3>
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">{{ wine.wine_type }}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-2">{{ wine.country }}</p>
+                        <p class="text-gray-700 text-sm mb-3 line-clamp-2">{{ wine.description }}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-red-800">S/ {{ "%.2f"|format(wine.price) }}</span>
+                            <div class="flex space-x-2">
+                                <a href="{{ url_for('wine.detail', wine_id=wine.id) }}" 
+                                   class="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg hover:bg-gray-300 text-sm">
+                                    Ver
+                                </a>
+                                <form action="{{ url_for('cart.add_to_cart') }}" method="POST" class="inline">
+                                    <input type="hidden" name="wine_id" value="{{ wine.id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="bg-red-800 text-white px-3 py-1 rounded-lg hover:bg-red-900 text-sm">
+                                        +
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-12">
+                <p class="text-gray-600 text-lg">No se encontraron vinos con los filtros seleccionados.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

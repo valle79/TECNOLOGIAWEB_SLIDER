@@ -1,91 +1,97 @@
 """
-Flask Modern Slider Application
+Wine E-commerce Application
 
-A modern, interactive slider built with Flask backend and HTML/Tailwind CSS/JavaScript frontend.
+Professional e-commerce system for wine sales in Peru and international export.
+Built with Flask, MySQL, and modern web technologies.
 """
 
-from flask import Flask, render_template
-from typing import List, Dict
+from flask import Flask
+from config import config
+from models.database import Database
+import logging
+import os
 
-app = Flask(__name__)
-
-# Configure Flask application
-app.config['DEBUG'] = True
-
-
-# Slide data structure
-slides_data: List[Dict[str, str]] = [
-    {
-        'image_url': '/static/images/slide1.jpg',
-        'title': 'Discover Amazing Features',
-        'description': 'Experience the next generation of web sliders with modern design and smooth animations',
-        'button_text': 'Learn More'
-    },
-    {
-        'image_url': '/static/images/slide2.jpg',
-        'title': 'Responsive Design',
-        'description': 'Works perfectly on all devices from mobile to desktop with adaptive controls',
-        'button_text': 'Explore'
-    },
-    {
-        'image_url': '/static/images/slide3.jpg',
-        'title': 'Interactive Controls',
-        'description': 'Navigate with mouse, keyboard, or touch gestures for maximum flexibility',
-        'button_text': 'Try Now'
-    },
-    {
-        'image_url': '/static/images/slide4.jpg',
-        'title': 'Modern Aesthetics',
-        'description': 'Beautiful glassmorphism effects and smooth transitions create a premium experience',
-        'button_text': 'Get Started'
-    }
-]
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
-def get_slides_data() -> List[Dict[str, str]]:
-    """
-    Provides validated slide data structure.
+def create_app(config_name='development'):
+    """Application factory pattern"""
+    app = Flask(__name__)
     
-    Returns:
-        List of slide dictionaries with keys:
-        - image_url: str (path to image relative to static folder)
-        - title: str (slide title)
-        - description: str (slide description)
-        - button_text: str (CTA button text)
-    """
-    # Validate that slides_data is not empty
-    if not slides_data:
-        return []
+    # Load configuration
+    app.config.from_object(config[config_name])
     
-    # Validate each slide has all required fields
-    required_fields = ['image_url', 'title', 'description', 'button_text']
-    validated_slides = []
+    # Initialize database
+    try:
+        db_config = {
+            'host': app.config['DB_HOST'],
+            'port': app.config['DB_PORT'],
+            'user': app.config['DB_USER'],
+            'password': app.config['DB_PASSWORD'],
+            'database': app.config['DB_NAME']
+        }
+        Database.initialize(db_config)
+        logger.info("Database initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize database: {e}")
+        raise
     
-    for slide in slides_data:
-        # Check if all required fields exist and are non-empty strings
-        if all(
-            field in slide and 
-            isinstance(slide[field], str) and 
-            slide[field].strip()
-            for field in required_fields
-        ):
-            validated_slides.append(slide)
+    # Register blueprints
+    from controllers import main_bp, wine_bp, cart_bp, order_bp, auth_bp, admin_bp
     
-    return validated_slides
-
-
-@app.route('/')
-def index():
-    """
-    Main route that renders the slider page.
+    app.register_blueprint(main_bp)
+    app.register_blueprint(wine_bp)
+    app.register_blueprint(cart_bp)
+    app.register_blueprint(order_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(admin_bp)
     
-    Returns:
-        Rendered HTML template for the slider
-    """
-    slides = get_slides_data()
-    return render_template('index.html', slides=slides)
+    # Error handlers
+    @app.errorhandler(404)
+    def not_found(error):
+        from flask import render_template
+        from services.cart_service import CartService
+        return render_template('404.html', cart_count=CartService.get_cart_count()), 404
+    
+    @app.errorhandler(500)
+    def internal_error(error):
+        from flask import render_template
+        from services.cart_service import CartService
+        logger.error(f"Internal server error: {error}")
+        return render_template('500.html', cart_count=CartService.get_cart_count()), 500
+    
+    # Context processor for global template variables
+    @app.context_processor
+    def inject_globals():
+        from services.cart_service import CartService
+        from flask import session
+        return {
+            'cart_count': CartService.get_cart_count(),
+            'is_logged_in': 'user_id' in session,
+            'is_admin': session.get('is_admin', False),
+            'user_name': session.get('user_name')
+        }
+    
+    # Cleanup on shutdown
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        pass
+    
+    return app
 
 
 if __name__ == '__main__':
-    # Run the Flask development server
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Get environment
+    env = os.getenv('FLASK_ENV', 'development')
+    
+    # Create app
+    app = create_app(env)
+    
+    # Run server
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=(env == 'development'))

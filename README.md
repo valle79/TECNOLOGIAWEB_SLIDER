@@ -1,152 +1,343 @@
-# Flask Modern Slider
+# Vinos del Valle - E-commerce Platform
 
-Un slider (carrusel) moderno e interactivo construido con Flask como backend y HTML/Tailwind CSS v4/JavaScript en el frontend. Proporciona una experiencia de usuario fluida, responsive y con funcionalidades avanzadas.
+Sistema de e-commerce profesional para venta de vinos premium en Perú con capacidad de exportación internacional. Construido con Flask, PostgreSQL (Neon), y tecnologías web modernas.
 
-## Características Principales
+## 🎯 Características Principales
 
-- 🎨 Diseño moderno con efectos glassmorphism y backdrop blur
+### Frontend
+- ✨ Diseño moderno y responsive con Tailwind CSS
+- 🛒 Carrito de compras interactivo con AJAX
+- 🔍 Catálogo con filtros avanzados (tipo, país, precio, búsqueda)
 - 📱 Completamente responsive (móvil, tablet, desktop)
-- 👆 Soporte para gestos táctiles (swipe en dispositivos móviles)
-- 🌓 Modo claro y oscuro con toggle interactivo
-- ⚡ Autoplay con pausa automática en hover
-- 🎯 Navegación circular infinita
-- 📊 Contador de slides e indicadores visuales (dots)
-- 🧭 Navbar responsive con menú móvil
-- 🎭 Transiciones suaves y animaciones fluidas
-- 🖱️ Controles de navegación intuitivos (botones prev/next)
+- 🎨 Interfaz elegante tipo tienda premium
+- ⚡ Experiencia de usuario fluida
 
-## Requisitos
+### Backend
+- 🐍 Python 3.8+ con Flask 3.x
+- 🗄️ PostgreSQL (compatible con Neon.tech)
+- 🏗️ Arquitectura MVC profesional (Models, Services, Controllers)
+- 🔐 Sistema de autenticación con bcrypt
+- 📦 Gestión de sesiones y carrito
+- 🌍 Cálculo automático de envío local/internacional
 
-- Python 3.8 o superior
-- Flask 3.0.0 o superior
-- Navegador web moderno con soporte para ES6+
+### Funcionalidades de Negocio
+- 🍷 Catálogo completo de vinos con detalles
+- 🛍️ Sistema de compras con carrito
+- 📋 Gestión de pedidos y estados
+- 👥 Registro y login de usuarios
+- 🔧 Panel de administración completo
+- 🌎 Soporte para exportación internacional
+- 💰 Cálculo de costos de envío por país
+- 📊 Dashboard con estadísticas de ventas
 
-## Instalación
+### Seguridad
+- ✅ Validación de inputs en frontend y backend
+- 🔒 Consultas parametrizadas (prevención SQL injection)
+- 🛡️ Contraseñas hasheadas con bcrypt
+- 🔐 Sesiones seguras con Flask
+- ⚠️ Manejo robusto de errores
 
-1. Clona este repositorio:
+## 📁 Estructura del Proyecto
+
+```
+wine-ecommerce/
+├── app.py                      # Aplicación principal Flask
+├── config.py                   # Configuración de la aplicación
+├── database.sql                # Script de inicialización de BD
+├── requirements.txt            # Dependencias Python
+├── .env.example                # Ejemplo de variables de entorno
+├── INSTALL.md                  # Guía de instalación detallada
+├── README.md                   # Este archivo
+│
+├── models/                     # Modelos de datos
+│   ├── __init__.py
+│   ├── database.py            # Gestión de conexiones
+│   ├── wine.py                # Modelo de vinos
+│   ├── order.py               # Modelo de pedidos
+│   └── user.py                # Modelo de usuarios
+│
+├── services/                   # Lógica de negocio
+│   ├── __init__.py
+│   ├── cart_service.py        # Servicio de carrito
+│   └── order_service.py       # Servicio de pedidos
+│
+├── controllers/                # Controladores/Rutas
+│   ├── __init__.py
+│   ├── main_controller.py     # Rutas principales
+│   ├── wine_controller.py     # Rutas de vinos
+│   ├── cart_controller.py     # Rutas de carrito
+│   ├── order_controller.py    # Rutas de pedidos
+│   ├── auth_controller.py     # Autenticación
+│   └── admin_controller.py    # Panel admin
+│
+├── templates/                  # Templates HTML
+│   ├── base.html              # Template base
+│   ├── index.html             # Página principal
+│   ├── catalog.html           # Catálogo de vinos
+│   ├── wine_detail.html       # Detalle de vino
+│   ├── cart.html              # Carrito de compras
+│   ├── checkout.html          # Checkout
+│   ├── order_confirmation.html # Confirmación de pedido
+│   ├── login.html             # Login
+│   ├── register.html          # Registro
+│   ├── my_orders.html         # Mis pedidos
+│   ├── 404.html               # Error 404
+│   ├── 500.html               # Error 500
+│   └── admin/                 # Templates de admin
+│       ├── dashboard.html
+│       ├── wines.html
+│       ├── wine_form.html
+│       ├── orders.html
+│       └── order_detail.html
+│
+└── static/                     # Archivos estáticos
+    ├── css/
+    │   └── styles.css         # Estilos personalizados
+    ├── js/
+    │   ├── main.js            # JavaScript principal
+    │   └── slider.js          # (legacy - puede eliminarse)
+    ├── images/
+    │   ├── wines/             # Imágenes de vinos
+    │   ├── icons/             # Iconos
+    │   └── hero-wine.jpg      # Imagen hero
+    └── icons/                 # Iconos adicionales
+```
+
+## 🚀 Instalación Rápida
+
+### 1. Requisitos
+- Python 3.8+
+- PostgreSQL o cuenta en Neon.tech
+- pip
+
+### 2. Clonar e Instalar
 ```bash
 git clone <repository-url>
-cd flask-modern-slider
-```
-
-2. Crea un entorno virtual (recomendado):
-```bash
+cd wine-ecommerce
 python -m venv venv
-```
-
-3. Activa el entorno virtual:
-   - En Windows:
-     ```bash
-     venv\Scripts\activate
-     ```
-   - En macOS/Linux:
-     ```bash
-     source venv/bin/activate
-     ```
-
-4. Instala las dependencias:
-```bash
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Ejecución
+### 3. Configurar Base de Datos
+```bash
+# Crear cuenta en Neon.tech o usar PostgreSQL local
+# Ejecutar database.sql en tu base de datos
+```
 
-1. Ejecuta el servidor Flask:
+### 4. Configurar Variables de Entorno
+```bash
+cp .env.example .env
+# Editar .env con tus credenciales
+```
+
+### 5. Ejecutar
 ```bash
 python app.py
 ```
 
-2. Abre tu navegador y visita:
-```
-http://localhost:5000
-```
+Visita: `http://localhost:5000`
 
-El servidor se ejecutará en modo debug, lo que permite ver cambios en tiempo real durante el desarrollo.
+**Ver [INSTALL.md](INSTALL.md) para instrucciones detalladas.**
 
-## Estructura del Proyecto
+## 🔧 Tecnologías Utilizadas
 
-```
-tecnologiaweb_slider/
-├── app.py                      # Aplicación Flask principal
-├── requirements.txt            # Dependencias de Python
-├── README.md                   # Documentación
-├── static/                     # Archivos estáticos
-│   ├── css/                    # Hojas de estilo
-│   ├── js/                     # Scripts JavaScript
-│   └── images/                 # Imágenes del slider
-└── templates/                  # Templates HTML
-    └── index.html              # Template principal
-```
+### Backend
+- **Flask 3.x** - Framework web Python
+- **PostgreSQL** - Base de datos relacional
+- **psycopg2** - Adaptador PostgreSQL para Python
+- **bcrypt** - Hashing de contraseñas
+- **python-dotenv** - Gestión de variables de entorno
 
-### Componentes Principales
+### Frontend
+- **HTML5** - Estructura
+- **Tailwind CSS** - Framework CSS utility-first
+- **JavaScript ES6+** - Interactividad
+- **Fetch API** - Comunicación AJAX
 
-- **app.py**: Punto de entrada de la aplicación Flask. Gestiona rutas y datos del slider con validación de datos.
-- **templates/index.html**: Template HTML principal con estructura del slider, navbar responsive y controles interactivos.
-- **static/css/styles.css**: Archivo de estilos personalizados (actualmente vacío, se usa Tailwind CSS v4 vía CDN).
-- **static/js/slider.js**: Lógica JavaScript del slider (navegación, autoplay, controles, swipe, tema oscuro/claro).
-- **static/images/**: Directorio con las imágenes de los slides (slide1.jpg - slide4.jpg).
+### Base de Datos
+- **Neon.tech** - PostgreSQL serverless (recomendado)
+- **PostgreSQL 14+** - Compatible con cualquier instancia
 
-## Tecnologías Utilizadas
+## 📊 Esquema de Base de Datos
 
-- **Backend**: Flask 3.x (Python)
-- **Frontend**: HTML5, Tailwind CSS v4 (CDN), JavaScript ES6+
-- **Estilos**: Tailwind CSS utility-first framework con efectos glassmorphism
-- **Características**: Responsive design, touch gestures, dark/light mode
+### Tablas Principales
 
-## Funcionalidades del Slider
+**users** - Usuarios del sistema
+- id (UUID, PK)
+- email (VARCHAR, UNIQUE)
+- password_hash (VARCHAR)
+- full_name (VARCHAR)
+- phone (VARCHAR)
+- is_admin (BOOLEAN)
+- created_at, updated_at (TIMESTAMP)
 
-### Navegación
-- Botones prev/next con iconos SVG
-- Indicadores (dots) clicables para acceso directo
-- Navegación circular infinita
-- Contador visual de slides (ej: 1 / 4)
+**wines** - Catálogo de vinos
+- id (UUID, PK)
+- name (VARCHAR)
+- wine_type (VARCHAR) - Tinto, Blanco, Rosé, Espumoso
+- price (DECIMAL)
+- country (VARCHAR)
+- region (VARCHAR)
+- year (INTEGER)
+- grape_variety (VARCHAR)
+- alcohol_content (DECIMAL)
+- description (TEXT)
+- stock (INTEGER)
+- image_url (VARCHAR)
+- is_featured (BOOLEAN)
+- created_at, updated_at (TIMESTAMP)
 
-### Interactividad
-- Autoplay cada 4 segundos
-- Pausa automática al hacer hover sobre el slider
-- Swipe gestures para dispositivos táctiles (50px threshold)
-- Toggle de tema oscuro/claro
+**orders** - Pedidos
+- id (UUID, PK)
+- user_id (UUID, FK)
+- customer_name, customer_email, customer_phone
+- shipping_address, shipping_city, shipping_country
+- is_international (BOOLEAN)
+- subtotal, shipping_cost, total (DECIMAL)
+- status (VARCHAR) - pending, confirmed, processing, shipped, delivered, cancelled
+- payment_method (VARCHAR)
+- notes (TEXT)
+- created_at, updated_at (TIMESTAMP)
 
-### Diseño
-- Navbar responsive con menú móvil
-- Efectos glassmorphism (backdrop-blur)
-- Transiciones suaves (opacity, scale, hover effects)
-- Gradientes sobre imágenes para mejor legibilidad
-- Botones CTA personalizables por slide
+**order_items** - Detalles de pedidos
+- id (UUID, PK)
+- order_id (UUID, FK)
+- wine_id (UUID, FK)
+- wine_name, wine_price (VARCHAR, DECIMAL)
+- quantity (INTEGER)
+- subtotal (DECIMAL)
+- created_at (TIMESTAMP)
 
-## Desarrollo
+## 🔐 Credenciales por Defecto
 
-El proyecto está configurado en modo debug por defecto. Los cambios en archivos Python reiniciarán automáticamente el servidor. Para cambios en archivos estáticos (CSS/JS/HTML), simplemente recarga el navegador.
+**Administrador:**
+- Email: `admin@vinosdelvalle.com`
+- Contraseña: `admin123`
 
-### Personalización
+⚠️ **IMPORTANTE**: Cambiar estas credenciales en producción.
 
-Para personalizar el slider, puedes modificar:
+## 🌐 API Endpoints
 
-1. **Datos de los slides** en `app.py`:
-   - Edita el array `slides_data` con tus propias imágenes, títulos, descripciones y textos de botones
-   - Cada slide requiere: `image_url`, `title`, `description`, `button_text`
+### Públicos
+- `GET /` - Página principal
+- `GET /wines` - Catálogo de vinos
+- `GET /wines/<id>` - Detalle de vino
+- `GET /wines/api/wines` - API de vinos (JSON)
+- `POST /cart/add` - Agregar al carrito
+- `POST /cart/update` - Actualizar carrito
+- `POST /cart/remove` - Eliminar del carrito
+- `GET /cart` - Ver carrito
 
-2. **Velocidad del autoplay** en `static/js/slider.js`:
-   - Modifica el valor en `setInterval(nextSlide, 4000)` (4000ms = 4 segundos)
+### Autenticación Requerida
+- `GET /orders/checkout` - Checkout
+- `POST /orders/create` - Crear pedido
+- `GET /orders/my-orders` - Mis pedidos
+- `GET /orders/<id>` - Detalle de pedido
 
-3. **Estilos** en `templates/index.html`:
-   - Ajusta las clases de Tailwind CSS para cambiar colores, tamaños, espaciados, etc.
-   - Modifica efectos glassmorphism cambiando `bg-white/10`, `backdrop-blur-md`, etc.
+### Admin (Requiere is_admin=true)
+- `GET /admin/dashboard` - Dashboard
+- `GET /admin/wines` - Gestionar vinos
+- `POST /admin/wines/add` - Agregar vino
+- `POST /admin/wines/edit/<id>` - Editar vino
+- `POST /admin/wines/delete/<id>` - Eliminar vino
+- `GET /admin/orders` - Gestionar pedidos
+- `POST /admin/orders/<id>/update-status` - Actualizar estado
 
-4. **Imágenes**:
-   - Reemplaza las imágenes en `static/images/` manteniendo los nombres o actualiza las rutas en `slides_data`
+## 💡 Características Avanzadas
 
-## Estructura de Datos
+### Exportación Internacional
+- Detección automática de país
+- Cálculo de costos de envío diferenciados
+- Campos específicos para envío internacional
 
-Cada slide en `app.py` sigue esta estructura:
+### Panel de Administración
+- Dashboard con estadísticas
+- Gestión completa de vinos (CRUD)
+- Gestión de pedidos y estados
+- Filtros y búsqueda avanzada
 
+### Carrito de Compras
+- Persistencia en sesión
+- Actualización en tiempo real
+- Validación de stock
+- Cálculo automático de totales
+
+## 🎨 Personalización
+
+### Cambiar Colores
+Editar clases de Tailwind en templates:
+- `bg-red-800` → Color principal
+- `text-red-800` → Color de texto
+- `hover:bg-red-900` → Color hover
+
+### Agregar Vinos
+1. Acceder al panel admin
+2. Ir a "Gestionar Vinos"
+3. Click en "Agregar Vino"
+4. Completar formulario
+
+### Modificar Costos de Envío
+Editar en `config.py`:
 ```python
-{
-    'image_url': '/static/images/slide1.jpg',  # Ruta a la imagen
-    'title': 'Título del Slide',                # Título principal
-    'description': 'Descripción del slide',     # Texto descriptivo
-    'button_text': 'Texto del Botón'           # Texto del CTA button
-}
+INTERNATIONAL_SHIPPING_RATE = 25.00
+LOCAL_SHIPPING_RATE = 10.00
 ```
 
-La función `get_slides_data()` valida que todos los campos requeridos estén presentes antes de renderizar.
+## 📝 Buenas Prácticas Implementadas
+
+- ✅ Separación de responsabilidades (MVC)
+- ✅ Validación de datos en múltiples capas
+- ✅ Manejo de errores robusto
+- ✅ Logging de aplicación
+- ✅ Connection pooling para BD
+- ✅ Consultas parametrizadas
+- ✅ Código modular y reutilizable
+- ✅ Comentarios y documentación
+- ✅ Variables de entorno para configuración
+- ✅ Estructura escalable
+
+## 🚀 Despliegue en Producción
+
+### Recomendaciones
+1. Usar Gunicorn como servidor WSGI
+2. Configurar Nginx como reverse proxy
+3. Habilitar HTTPS con Let's Encrypt
+4. Usar variables de entorno seguras
+5. Configurar backups de base de datos
+6. Implementar monitoreo y logs
+7. Optimizar imágenes
+8. Configurar CDN para estáticos
+
+### Ejemplo con Gunicorn
+```bash
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:8000 app:app
+```
+
+## 🐛 Solución de Problemas
+
+Ver [INSTALL.md](INSTALL.md) para soluciones comunes.
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 👥 Contribuciones
+
+Las contribuciones son bienvenidas. Por favor:
+1. Fork el proyecto
+2. Crea una rama para tu feature
+3. Commit tus cambios
+4. Push a la rama
+5. Abre un Pull Request
+
+## 📧 Contacto
+
+Para preguntas o soporte:
+- Email: info@vinosdelvalle.com
+- Web: www.vinosdelvalle.com
+
+---
+
+**Desarrollado con ❤️ para la industria vitivinícola peruana**

@@ -1,1 +1,15 @@
+# Flask E-commerce Wine Store
+# Python Dependencies
+
+# Core Framework
 Flask>=3.0.0
+
+# Database
+mysql-connector-python>=8.0.33
+python-dotenv>=1.0.0
+
+# Security & Authentication
+bcrypt>=4.1.2
+
+# Utilities
+Werkzeug>=3.0.1
