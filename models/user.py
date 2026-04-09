@@ -20,12 +20,14 @@ class User:
         query = """
             INSERT INTO users (email, password_hash, full_name, phone)
             VALUES (%s, %s, %s, %s)
-            RETURNING id
         """
         
         try:
             with Database.get_cursor() as cursor:
                 cursor.execute(query, (email, password_hash, full_name, phone))
+                
+                # Get the last inserted ID
+                cursor.execute("SELECT id FROM users WHERE id = LAST_INSERT_ID()")
                 result = cursor.fetchone()
                 return result['id'] if result else None
         except Exception as e:

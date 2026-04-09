@@ -113,7 +113,6 @@ class Wine:
             INSERT INTO wines (name, wine_type, price, country, region, year,
                              grape_variety, alcohol_content, description, stock, image_url, is_featured)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            RETURNING id
         """
         
         params = (
@@ -134,6 +133,9 @@ class Wine:
         try:
             with Database.get_cursor() as cursor:
                 cursor.execute(query, params)
+                
+                # Get the last inserted ID
+                cursor.execute("SELECT id FROM wines WHERE id = LAST_INSERT_ID()")
                 result = cursor.fetchone()
                 return result['id'] if result else None
         except Exception as e:

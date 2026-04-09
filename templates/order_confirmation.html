@@ -15,7 +15,7 @@
             <div class="bg-gray-50 rounded-lg p-6 mb-8">
                 <h2 class="text-xl font-semibold text-gray-900 mb-4">Detalles del Pedido</h2>
                 <div class="space-y-2 text-left">
-                    <p><span class="font-semibold">Número de Pedido:</span> {{ order.id[:8] }}</p>
+                    <p><span class="font-semibold">Número de Pedido:</span> {{ order.order_id[:8] }}</p>
                     <p><span class="font-semibold">Fecha:</span> {{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
                     <p><span class="font-semibold">Total:</span> S/ {{ "%.2f"|format(order.total) }}</p>
                     <p><span class="font-semibold">Estado:</span> 
@@ -31,7 +31,7 @@
             </p>
 
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="{{ url_for('order.order_detail', order_id=order.id) }}" 
+                <a href="{{ url_for('order.order_detail', order_id=order.order_id) }}" 
                    class="bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900 font-medium">
                     Ver Detalles del Pedido
                 </a>

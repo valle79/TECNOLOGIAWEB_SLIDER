@@ -31,7 +31,6 @@ class Order:
                 status, payment_method, notes
             )
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            RETURNING id
         """
         
         item_query = """
@@ -61,10 +60,19 @@ class Order:
                     order_data.get('notes')
                 ))
                 
+                # Get the UUID of the last inserted order
+                # Since we're using UUID() as default, we need to get it from the table
+                cursor.execute("""
+                    SELECT id FROM orders 
+                    WHERE customer_email = %s 
+                    ORDER BY created_at DESC 
+                    LIMIT 1
+                """, (order_data['customer_email'],))
+                
                 result = cursor.fetchone()
                 if not result:
                     return None
-                
+                    
                 order_id = result['id']
                 
                 # Insert order items
@@ -82,6 +90,8 @@ class Order:
                 
         except Exception as e:
             logger.error(f"Error creating order: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
             return None
     
     @staticmethod
