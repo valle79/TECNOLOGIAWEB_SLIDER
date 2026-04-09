@@ -147,19 +147,10 @@
         </div>
     </div>
 </div>
-
-<script>
-document.getElementById('shipping_country').addEventListener('change', function() {
-    const country = this.value;
-    const subtotal = {{ cart_total }};
-    const localShipping = {{ config.LOCAL_SHIPPING_RATE }};
-    const intlShipping = {{ config.INTERNATIONAL_SHIPPING_RATE }};
-    
-    const shipping = (country === 'Peru') ? localShipping : intlShipping;
-    const total = subtotal + shipping;
-    
-    document.getElementById('shipping-cost').textContent = 'S/ ' + shipping.toFixed(2);
-    document.getElementById('total-cost').textContent = 'S/ ' + total.toFixed(2);
-});
-</script>
+<div id="checkout-config" 
+     data-cart-total="{{ cart_total }}"
+     data-local-shipping="{{ config.LOCAL_SHIPPING_RATE }}"
+     data-intl-shipping="{{ config.INTERNATIONAL_SHIPPING_RATE }}"
+     style="display: none;">
+</div>
 {% endblock %}

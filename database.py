@@ -11,14 +11,14 @@ logger = logging.getLogger(__name__)
 
 class Database:
     """Database connection manager with connection pooling for MySQL"""
-    
+
     _pool = None
-    
+
     @classmethod
     def initialize(cls, db_config):
         """
         Initialize the connection pool
-        
+
         Args:
             db_config: Dictionary with database configuration
                 - host: Database host
@@ -43,14 +43,14 @@ class Database:
         except Exception as e:
             logger.error(f"Failed to initialize database pool: {e}")
             raise
-    
+
     @classmethod
     @contextmanager
     def get_connection(cls):
         """Get a connection from the pool"""
         if cls._pool is None:
             raise Exception("Database pool not initialized. Call Database.initialize() first.")
-        
+
         conn = cls._pool.get_connection()
         try:
             yield conn
@@ -61,7 +61,7 @@ class Database:
             raise
         finally:
             conn.close()
-    
+
     @classmethod
     @contextmanager
     def get_cursor(cls, dictionary=True):
@@ -72,7 +72,7 @@ class Database:
                 yield cursor
             finally:
                 cursor.close()
-    
+
     @classmethod
     def close_all(cls):
         """Close all connections in the pool"""

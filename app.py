@@ -7,7 +7,7 @@ Built with Flask, MySQL, and modern web technologies.
 
 from flask import Flask
 from config import config
-from models.database import Database
+from database import Database
 import logging
 import os
 
@@ -42,8 +42,13 @@ def create_app(config_name='development'):
         raise
     
     # Register blueprints
-    from controllers import main_bp, wine_bp, cart_bp, order_bp, auth_bp, admin_bp
-    
+    from main import main_bp
+    from wines import wine_bp
+    from cart import cart_bp
+    from orders import order_bp
+    from auth import auth_bp
+    from admin import admin_bp
+
     app.register_blueprint(main_bp)
     app.register_blueprint(wine_bp)
     app.register_blueprint(cart_bp)
@@ -55,20 +60,20 @@ def create_app(config_name='development'):
     @app.errorhandler(404)
     def not_found(error):
         from flask import render_template
-        from services.cart_service import CartService
+        from services import CartService
         return render_template('404.html', cart_count=CartService.get_cart_count()), 404
-    
+
     @app.errorhandler(500)
     def internal_error(error):
         from flask import render_template
-        from services.cart_service import CartService
+        from services import CartService
         logger.error(f"Internal server error: {error}")
         return render_template('500.html', cart_count=CartService.get_cart_count()), 500
     
     # Context processor for global template variables
     @app.context_processor
     def inject_globals():
-        from services.cart_service import CartService
+        from services import CartService
         from flask import session
         return {
             'cart_count': CartService.get_cart_count(),

@@ -1,8 +1,8 @@
 """
-Shopping cart controller
+Shopping cart routes
 """
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
-from services.cart_service import CartService
+from services import CartService
 
 cart_bp = Blueprint('cart', __name__, url_prefix='/cart')
 
@@ -13,7 +13,7 @@ def view_cart():
     cart_items = CartService.get_cart_items()
     cart_total = CartService.get_cart_total()
     cart_count = CartService.get_cart_count()
-    
+
     return render_template('cart.html',
                          cart_items=cart_items,
                          cart_total=cart_total,
@@ -24,10 +24,10 @@ def view_cart():
 def add_to_cart():
     """Add item to cart"""
     data = request.get_json() if request.is_json else request.form
-    
+
     wine_id = data.get('wine_id')
     quantity = int(data.get('quantity', 1))
-    
+
     if not wine_id:
         if request.is_json:
             return jsonify({
@@ -36,9 +36,9 @@ def add_to_cart():
             }), 400
         flash('Error: ID de vino requerido', 'error')
         return redirect(request.referrer or url_for('main.index'))
-    
+
     success = CartService.add_item(wine_id, quantity)
-    
+
     if request.is_json:
         if success:
             return jsonify({
@@ -63,10 +63,10 @@ def add_to_cart():
 def update_cart():
     """Update cart item quantity"""
     data = request.get_json() if request.is_json else request.form
-    
+
     wine_id = data.get('wine_id')
     quantity = int(data.get('quantity', 1))
-    
+
     if not wine_id:
         if request.is_json:
             return jsonify({
@@ -75,9 +75,9 @@ def update_cart():
             }), 400
         flash('Error: ID de vino requerido', 'error')
         return redirect(url_for('cart.view_cart'))
-    
+
     success = CartService.update_item(wine_id, quantity)
-    
+
     if request.is_json:
         if success:
             return jsonify({
@@ -102,9 +102,9 @@ def update_cart():
 def remove_from_cart():
     """Remove item from cart"""
     data = request.get_json() if request.is_json else request.form
-    
+
     wine_id = data.get('wine_id')
-    
+
     if not wine_id:
         if request.is_json:
             return jsonify({
@@ -113,9 +113,9 @@ def remove_from_cart():
             }), 400
         flash('Error: ID de vino requerido', 'error')
         return redirect(url_for('cart.view_cart'))
-    
+
     success = CartService.remove_item(wine_id)
-    
+
     if request.is_json:
         if success:
             return jsonify({
@@ -140,7 +140,7 @@ def remove_from_cart():
 def clear_cart():
     """Clear all items from cart"""
     CartService.clear_cart()
-    
+
     if request.is_json:
         return jsonify({
             'success': True,

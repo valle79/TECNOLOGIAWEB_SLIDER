@@ -1,9 +1,9 @@
 """
-Wine catalog controller
+Wine catalog routes
 """
 from flask import Blueprint, render_template, request, jsonify
-from models.wine import Wine
-from services.cart_service import CartService
+from models import Wine
+from services import CartService
 
 wine_bp = Blueprint('wine', __name__, url_prefix='/wines')
 
@@ -18,7 +18,7 @@ def catalog():
     max_price = request.args.get('max_price', type=float)
     search = request.args.get('search')
     page = request.args.get('page', 1, type=int)
-    
+
     # Build filters
     filters = {}
     if wine_type:
@@ -31,18 +31,18 @@ def catalog():
         filters['max_price'] = max_price
     if search:
         filters['search'] = search
-    
+
     # Get wines
     per_page = 12
     offset = (page - 1) * per_page
     wines = Wine.get_all(filters=filters, limit=per_page, offset=offset)
-    
+
     # Get filter options
     wine_types = Wine.get_wine_types()
     countries = Wine.get_countries()
-    
+
     cart_count = CartService.get_cart_count()
-    
+
     return render_template('catalog.html',
                          wines=wines,
                          wine_types=wine_types,
@@ -56,13 +56,13 @@ def catalog():
 def detail(wine_id):
     """Wine detail page"""
     wine = Wine.get_by_id(wine_id)
-    
+
     if not wine:
         return render_template('404.html'), 404
-    
+
     cart_count = CartService.get_cart_count()
-    
-    return render_template('wine_detail.html', 
+
+    return render_template('wine_detail.html',
                          wine=wine,
                          cart_count=cart_count)
 
@@ -71,7 +71,7 @@ def detail(wine_id):
 def api_wines():
     """API endpoint to get wines"""
     filters = {}
-    
+
     if request.args.get('type'):
         filters['wine_type'] = request.args.get('type')
     if request.args.get('country'):
@@ -80,9 +80,9 @@ def api_wines():
         filters['min_price'] = float(request.args.get('min_price'))
     if request.args.get('max_price'):
         filters['max_price'] = float(request.args.get('max_price'))
-    
+
     wines = Wine.get_all(filters=filters)
-    
+
     return jsonify({
         'success': True,
         'wines': wines
@@ -93,13 +93,13 @@ def api_wines():
 def api_wine_detail(wine_id):
     """API endpoint to get wine details"""
     wine = Wine.get_by_id(wine_id)
-    
+
     if not wine:
         return jsonify({
             'success': False,
             'error': 'Wine not found'
         }), 404
-    
+
     return jsonify({
         'success': True,
         'wine': wine
