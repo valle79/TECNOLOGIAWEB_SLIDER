@@ -43,7 +43,7 @@ cursor.execute("""
 conn.commit()
 
 print("✅ Usuario admin creado exitosamente!")
-print("Email: admin@vinosdelvalle.com")
+print("Email: admin2@vinosdelvalle.com")
 print("Contraseña: admin123")
 
 # Verify

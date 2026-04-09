@@ -470,8 +470,8 @@ class User:
             with Database.get_cursor() as cursor:
                 cursor.execute(query, (email, password_hash, full_name, phone))
 
-                # Get the last inserted ID
-                cursor.execute("SELECT id FROM users WHERE id = LAST_INSERT_ID()")
+                # Get the newly inserted user by email
+                cursor.execute("SELECT id FROM users WHERE email = %s", (email,))
                 result = cursor.fetchone()
                 return result['id'] if result else None
         except Exception as e:
