@@ -13,3 +13,6 @@ bcrypt>=4.1.2
 
 # Utilities
 Werkzeug>=3.0.1
+
+# Production Server
+gunicorn>=21.2.0
