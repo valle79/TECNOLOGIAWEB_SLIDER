@@ -1,0 +1,30 @@
+services:
+  # Web Service
+  - type: web
+    name: vinos-del-valle
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 10000
+      - key: UPLOAD_FOLDER
+        value: static/images/wines
+      - key: MAX_CONTENT_LENGTH
+        value: 16777216
+      - key: INTERNATIONAL_SHIPPING_RATE
+        value: 25.00
+      - key: LOCAL_SHIPPING_RATE
+        value: 10.00
+
+databases:
+  # MySQL Database
+  - name: vinos-mysql
+    databaseName: wine_ecommerce
+    user: wine_user
