@@ -3,20 +3,37 @@
 {% block title %}Catálogo de Vinos - Vinos del Valle{% endblock %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h1 class="text-4xl font-bold text-gray-900 mb-8">Catálogo de Vinos</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">Catálogo de Vinos</h1>
+        <p class="text-gray-600">Descubre nuestra selección premium de vinos</p>
+    </div>
     
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
         <!-- Filters Sidebar -->
         <div class="lg:col-span-1">
-            <div class="bg-white p-6 rounded-lg shadow">
-                <h2 class="text-xl font-bold mb-4">Filtros</h2>
+            <!-- Mobile Filter Toggle -->
+            <button id="filter-toggle" class="lg:hidden w-full bg-red-800 text-white py-3 rounded-lg mb-4 flex items-center justify-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                </svg>
+                <span class="font-medium">Filtros</span>
+            </button>
+
+            <div id="filter-panel" class="hidden lg:block bg-white p-4 sm:p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path>
+                    </svg>
+                    Filtros
+                </h2>
                 
                 <form method="GET" action="{{ url_for('wine.catalog') }}">
                     <!-- Wine Type Filter -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de Vino</label>
-                        <select name="type" class="w-full border-gray-300 rounded-lg">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Vino</label>
+                        <select name="type" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                             <option value="">Todos</option>
                             {% for type in wine_types %}
                             <option value="{{ type }}" {% if current_filters.get('wine_type') == type %}selected{% endif %}>
@@ -28,8 +45,8 @@
                     
                     <!-- Country Filter -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">País</label>
-                        <select name="country" class="w-full border-gray-300 rounded-lg">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">País</label>
+                        <select name="country" class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                             <option value="">Todos</option>
                             {% for country in countries %}
                             <option value="{{ country }}" {% if current_filters.get('country') == country %}selected{% endif %}>
@@ -41,29 +58,29 @@
                     
                     <!-- Price Range -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Rango de Precio</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Rango de Precio</label>
                         <div class="grid grid-cols-2 gap-2">
                             <input type="number" name="min_price" placeholder="Min" 
                                    value="{{ current_filters.get('min_price', '') }}"
-                                   class="border-gray-300 rounded-lg">
+                                   class="border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                             <input type="number" name="max_price" placeholder="Max"
                                    value="{{ current_filters.get('max_price', '') }}"
-                                   class="border-gray-300 rounded-lg">
+                                   class="border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                         </div>
                     </div>
                     
                     <!-- Search -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Buscar</label>
                         <input type="text" name="search" placeholder="Nombre o descripción"
                                value="{{ current_filters.get('search', '') }}"
-                               class="w-full border-gray-300 rounded-lg">
+                               class="w-full border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
                     </div>
                     
-                    <button type="submit" class="w-full bg-red-800 text-white py-2 rounded-lg hover:bg-red-900">
+                    <button type="submit" class="w-full bg-gradient-to-r from-red-800 to-red-900 text-white py-3 rounded-lg hover:from-red-900 hover:to-red-950 font-medium shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
                         Aplicar Filtros
                     </button>
-                    <a href="{{ url_for('wine.catalog') }}" class="block text-center mt-2 text-gray-600 hover:text-gray-900">
+                    <a href="{{ url_for('wine.catalog') }}" class="block text-center mt-3 text-gray-600 hover:text-red-800 font-medium transition-colors duration-200">
                         Limpiar Filtros
                     </a>
                 </form>
@@ -73,33 +90,46 @@
         <!-- Wine Grid -->
         <div class="lg:col-span-3">
             {% if wines %}
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {% for wine in wines %}
-                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
-                    <div class="h-48 overflow-hidden">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+                    <div class="relative h-48 sm:h-56 overflow-hidden bg-gray-100">
                         <img src="{{ wine.image_url or url_for('static', filename='images/wines/default.jpg') }}" 
                              alt="{{ wine.name }}" 
-                             class="w-full h-full object-cover hover:scale-110 transition duration-300">
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-lg font-bold text-gray-900">{{ wine.name }}</h3>
-                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">{{ wine.wine_type }}</span>
+                             class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                        {% if wine.is_featured %}
+                        <div class="absolute top-2 right-2 bg-yellow-400 text-red-900 text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                            ⭐ Destacado
                         </div>
-                        <p class="text-gray-600 text-sm mb-2">{{ wine.country }}</p>
-                        <p class="text-gray-700 text-sm mb-3 line-clamp-2">{{ wine.description }}</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold text-red-800">S/ {{ "%.2f"|format(wine.price) }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="p-4 sm:p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-base sm:text-lg font-bold text-gray-900 line-clamp-1">{{ wine.name }}</h3>
+                            <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full whitespace-nowrap ml-2">{{ wine.wine_type }}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-2 flex items-center">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                            {{ wine.country }}
+                        </p>
+                        <p class="text-gray-700 text-sm mb-4 line-clamp-2">{{ wine.description }}</p>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+                            <span class="text-xl sm:text-2xl font-bold text-red-800">S/ {{ "%.2f"|format(wine.price) }}</span>
                             <div class="flex space-x-2">
                                 <a href="{{ url_for('wine.detail', wine_id=wine.id) }}" 
-                                   class="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg hover:bg-gray-300 text-sm">
+                                   class="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors duration-200">
                                     Ver
                                 </a>
                                 <form action="{{ url_for('cart.add_to_cart') }}" method="POST" class="inline">
                                     <input type="hidden" name="wine_id" value="{{ wine.id }}">
                                     <input type="hidden" name="quantity" value="1">
-                                    <button type="submit" class="bg-red-800 text-white px-3 py-1 rounded-lg hover:bg-red-900 text-sm">
-                                        +
+                                    <button type="submit" class="bg-gradient-to-r from-red-800 to-red-900 text-white px-4 py-2 rounded-lg hover:from-red-900 hover:to-red-950 text-sm font-medium shadow-md hover:shadow-lg transition-all duration-200 transform hover:scale-105">
+                                        <svg class="w-4 h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
                                     </button>
                                 </form>
                             </div>
@@ -109,11 +139,31 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div class="text-center py-12">
-                <p class="text-gray-600 text-lg">No se encontraron vinos con los filtros seleccionados.</p>
+            <div class="text-center py-16 bg-white rounded-lg shadow">
+                <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <p class="text-gray-600 text-lg font-medium">No se encontraron vinos con los filtros seleccionados.</p>
+                <a href="{{ url_for('wine.catalog') }}" class="inline-block mt-4 text-red-800 hover:text-red-900 font-medium">
+                    Ver todos los vinos
+                </a>
             </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+<script>
+    // Mobile filter toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const filterToggle = document.getElementById('filter-toggle');
+        const filterPanel = document.getElementById('filter-panel');
+        
+        if (filterToggle && filterPanel) {
+            filterToggle.addEventListener('click', function() {
+                filterPanel.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
 {% endblock %}
