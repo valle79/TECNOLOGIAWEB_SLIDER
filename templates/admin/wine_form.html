@@ -103,11 +103,26 @@
                     </div>
 
                     <div>
-                        <label for="image_url" class="block text-sm font-medium text-gray-700 mb-1">URL de Imagen</label>
+                        <label for="image_file" class="block text-sm font-medium text-gray-700 mb-1">Imagen del Vino</label>
+                        <input type="file" id="image_file" name="image_file" accept="image/*"
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800">
+                        <p class="text-xs text-gray-500 mt-1">Formatos permitidos: PNG, JPG, JPEG, GIF, WEBP (máx. 16MB)</p>
+                        
+                        {% if wine and wine.image_url %}
+                        <div class="mt-3">
+                            <p class="text-sm text-gray-600 mb-2">Imagen actual:</p>
+                            <img src="{{ wine.image_url }}" alt="{{ wine.name }}" class="h-32 w-auto rounded border">
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="image_url" class="block text-sm font-medium text-gray-700 mb-1">O URL de Imagen (opcional)</label>
                         <input type="text" id="image_url" name="image_url"
                                value="{{ wine.image_url if wine else '' }}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800"
                                placeholder="/static/images/wines/wine1.jpg">
+                        <p class="text-xs text-gray-500 mt-1">Si subes un archivo, este campo será ignorado</p>
                     </div>
 
                     <div class="flex gap-4">

@@ -6,6 +6,7 @@ from functools import wraps
 from models.wine import Wine
 from models.order import Order
 from services.cart_service import CartService
+from utils.file_upload import save_wine_image, delete_wine_image
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -57,6 +58,18 @@ def add_wine():
                              wine=None,
                              cart_count=cart_count)
     
+    # Handle image upload
+    image_url = request.form.get('image_url')  # Keep URL field as fallback
+    
+    if 'image_file' in request.files:
+        file = request.files['image_file']
+        if file and file.filename != '':
+            uploaded_url = save_wine_image(file)
+            if uploaded_url:
+                image_url = uploaded_url
+            else:
+                flash('Error al subir la imagen. Usando URL proporcionada.', 'warning')
+    
     wine_data = {
         'name': request.form.get('name'),
         'wine_type': request.form.get('wine_type'),
@@ -68,8 +81,8 @@ def add_wine():
         'alcohol_content': float(request.form.get('alcohol_content')) if request.form.get('alcohol_content') else None,
         'description': request.form.get('description'),
         'stock': int(request.form.get('stock', 0)),
-        'image_url': request.form.get('image_url'),
-        'is_featured': request.form.get('is_featured') == 'on'
+        'image_url': image_url,
+        'is_featured': bool(request.form.get('is_featured'))  # Fixed: converts to boolean
     }
     
     wine_id = Wine.create(wine_data)
@@ -98,6 +111,26 @@ def edit_wine(wine_id):
                              wine=wine,
                              cart_count=cart_count)
     
+    # Handle image upload
+    image_url = request.form.get('image_url')  # Keep URL field as fallback
+    old_image_url = wine.get('image_url')
+    
+    if 'image_file' in request.files:
+        file = request.files['image_file']
+        if file and file.filename != '':
+            uploaded_url = save_wine_image(file)
+            if uploaded_url:
+                # Delete old image if it was uploaded (not a default/external URL)
+                if old_image_url and old_image_url.startswith('/static/images/wines/'):
+                    delete_wine_image(old_image_url)
+                image_url = uploaded_url
+            else:
+                flash('Error al subir la imagen. Manteniendo imagen anterior.', 'warning')
+                image_url = old_image_url
+    elif not image_url:
+        # If no new file and no URL provided, keep the old image
+        image_url = old_image_url
+    
     wine_data = {
         'name': request.form.get('name'),
         'wine_type': request.form.get('wine_type'),
@@ -109,8 +142,8 @@ def edit_wine(wine_id):
         'alcohol_content': float(request.form.get('alcohol_content')) if request.form.get('alcohol_content') else None,
         'description': request.form.get('description'),
         'stock': int(request.form.get('stock', 0)),
-        'image_url': request.form.get('image_url'),
-        'is_featured': request.form.get('is_featured') == 'on'
+        'image_url': image_url,
+        'is_featured': bool(request.form.get('is_featured'))  # Fixed: converts to boolean
     }
     
     success = Wine.update(wine_id, wine_data)
