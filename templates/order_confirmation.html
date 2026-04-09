@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido Confirmado - Vinos del Valle{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 py-12">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-lg shadow-md p-8 text-center">
+            <div class="text-6xl mb-4">✅</div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">¡Pedido Realizado con Éxito!</h1>
+            <p class="text-gray-600 mb-8">
+                Gracias por tu compra. Hemos recibido tu pedido y lo procesaremos pronto.
+            </p>
+
+            <div class="bg-gray-50 rounded-lg p-6 mb-8">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Detalles del Pedido</h2>
+                <div class="space-y-2 text-left">
+                    <p><span class="font-semibold">Número de Pedido:</span> {{ order.id[:8] }}</p>
+                    <p><span class="font-semibold">Fecha:</span> {{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+                    <p><span class="font-semibold">Total:</span> S/ {{ "%.2f"|format(order.total) }}</p>
+                    <p><span class="font-semibold">Estado:</span> 
+                        <span class="inline-block bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">
+                            Pendiente
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <p class="text-gray-600 mb-8">
+                Recibirás un email de confirmación en <strong>{{ order.customer_email }}</strong> con los detalles de tu pedido.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{{ url_for('order.order_detail', order_id=order.id) }}" 
+                   class="bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900 font-medium">
+                    Ver Detalles del Pedido
+                </a>
+                <a href="{{ url_for('wine.catalog') }}" 
+                   class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300 font-medium">
+                    Seguir Comprando
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

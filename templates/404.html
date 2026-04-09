@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Página No Encontrada - Vinos del Valle{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center">
+        <h1 class="text-9xl font-bold text-red-800">404</h1>
+        <h2 class="mt-4 text-3xl font-bold text-gray-900">Página No Encontrada</h2>
+        <p class="mt-2 text-gray-600">Lo sentimos, la página que buscas no existe.</p>
+        <div class="mt-6">
+            <a href="{{ url_for('main.index') }}" class="inline-block bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900">
+                Volver al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

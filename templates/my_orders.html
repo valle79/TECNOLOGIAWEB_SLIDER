@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Mis Pedidos - Vinos del Valle{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Mis Pedidos</h1>
+
+        {% if orders %}
+        <div class="space-y-4">
+            {% for order in orders %}
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Pedido #{{ order.id[:8] }}</h3>
+                        <p class="text-sm text-gray-600">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+                    </div>
+                    <div class="mt-2 md:mt-0">
+                        {% if order.status == 'pending' %}
+                        <span class="inline-block bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            Pendiente
+                        </span>
+                        {% elif order.status == 'confirmed' %}
+                        <span class="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            Confirmado
+                        </span>
+                        {% elif order.status == 'processing' %}
+                        <span class="inline-block bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            Procesando
+                        </span>
+                        {% elif order.status == 'shipped' %}
+                        <span class="inline-block bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            Enviado
+                        </span>
+                        {% elif order.status == 'delivered' %}
+                        <span class="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            Entregado
+                        </span>
+                        {% elif order.status == 'cancelled' %}
+                        <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-semibold">
+                            Cancelado
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="border-t pt-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-600">Total: <span class="font-semibold text-gray-900">S/ {{ "%.2f"|format(order.total) }}</span></p>
+                            <p class="text-sm text-gray-600">Envío a: {{ order.shipping_city }}, {{ order.shipping_country }}</p>
+                        </div>
+                        <a href="{{ url_for('order.order_detail', order_id=order.id) }}" 
+                           class="bg-red-800 text-white px-4 py-2 rounded-lg hover:bg-red-900 text-sm font-medium">
+                            Ver Detalles
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="bg-white rounded-lg shadow-md p-12 text-center">
+            <div class="text-6xl mb-4">📦</div>
+            <h2 class="text-2xl font-semibold text-gray-900 mb-4">No tienes pedidos aún</h2>
+            <p class="text-gray-600 mb-6">Explora nuestro catálogo y realiza tu primera compra</p>
+            <a href="{{ url_for('wine.catalog') }}" 
+               class="inline-block bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900 font-medium">
+                Ver Catálogo
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

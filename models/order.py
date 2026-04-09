@@ -174,17 +174,44 @@ class Order:
         query = """
             SELECT 
                 COUNT(*) as total_orders,
-                SUM(total) as total_revenue,
+                COALESCE(SUM(total), 0) as total_revenue,
                 SUM(CASE WHEN is_international THEN 1 ELSE 0 END) as international_orders,
-                SUM(CASE WHEN is_international THEN total ELSE 0 END) as international_revenue
+                COALESCE(SUM(CASE WHEN is_international THEN total ELSE 0 END), 0) as international_revenue,
+                SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_orders
             FROM orders
             WHERE status != 'cancelled'
         """
         
+        wines_query = "SELECT COUNT(*) as total_wines FROM wines"
+        
         try:
             with Database.get_cursor() as cursor:
+                # Get order stats
                 cursor.execute(query)
-                return cursor.fetchone() or {}
+                stats = cursor.fetchone() or {}
+                
+                # Get wine count
+                cursor.execute(wines_query)
+                wine_stats = cursor.fetchone() or {}
+                
+                # Merge stats and ensure all values are not None
+                result = {
+                    'total_orders': stats.get('total_orders', 0) or 0,
+                    'total_revenue': float(stats.get('total_revenue', 0) or 0),
+                    'international_orders': stats.get('international_orders', 0) or 0,
+                    'international_revenue': float(stats.get('international_revenue', 0) or 0),
+                    'pending_orders': stats.get('pending_orders', 0) or 0,
+                    'total_wines': wine_stats.get('total_wines', 0) or 0
+                }
+                
+                return result
         except Exception as e:
             logger.error(f"Error fetching order statistics: {e}")
-            return {}
+            return {
+                'total_orders': 0,
+                'total_revenue': 0.0,
+                'international_orders': 0,
+                'international_revenue': 0.0,
+                'pending_orders': 0,
+                'total_wines': 0
+            }

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle del Pedido - Admin{% endblock %}
+
+{% block content %}
+<div class="bg-gray-50 py-12">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-6">
+            <a href="{{ url_for('admin.orders') }}" class="text-red-800 hover:text-red-900 font-medium">
+                ← Volver a Pedidos
+            </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-8">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Pedido #{{ order.id[:8] }}</h1>
+                    <p class="text-gray-600">{{ order.created_at.strftime('%d/%m/%Y %H:%M') }}</p>
+                </div>
+                <div>
+                    <form action="{{ url_for('admin.update_order_status', order_id=order.id) }}" method="POST">
+                        <select name="status" onchange="this.form.submit()"
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800">
+                            <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pendiente</option>
+                            <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>Confirmado</option>
+                            <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Procesando</option>
+                            <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Enviado</option>
+                            <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Entregado</option>
+                            <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                        </select>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Customer Info -->
+            <div class="border-t border-b py-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Información del Cliente</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-sm text-gray-600">Nombre</p>
+                        <p class="font-medium">{{ order.customer_name }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Email</p>
+                        <p class="font-medium">{{ order.customer_email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Teléfono</p>
+                        <p class="font-medium">{{ order.customer_phone }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600">Método de Pago</p>
+                        <p class="font-medium">{{ order.payment_method or 'No especificado' }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Info -->
+            <div class="border-b py-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Dirección de Envío</h2>
+                <p class="text-gray-700">{{ order.shipping_address }}</p>
+                <p class="text-gray-700">{{ order.shipping_city }}, {{ order.shipping_country }}</p>
+                {% if order.is_international %}
+                <p class="text-sm text-blue-600 mt-2">🌍 Envío Internacional</p>
+                {% endif %}
+                {% if order.notes %}
+                <div class="mt-4">
+                    <p class="text-sm text-gray-600">Notas:</p>
+                    <p class="text-gray-700">{{ order.notes }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Order Items -->
+            <div class="mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Productos</h2>
+                <div class="space-y-4">
+                    {% for item in order.items %}
+                    <div class="flex justify-between items-center border-b pb-4">
+                        <div>
+                            <p class="font-medium text-gray-900">{{ item.wine_name }}</p>
+                            <p class="text-sm text-gray-600">Cantidad: {{ item.quantity }}</p>
+                            <p class="text-sm text-gray-600">Precio unitario: S/ {{ "%.2f"|format(item.wine_price) }}</p>
+                        </div>
+                        <p class="font-semibold text-gray-900">S/ {{ "%.2f"|format(item.subtotal) }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Order Total -->
+            <div class="bg-gray-50 rounded-lg p-6">
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Subtotal</span>
+                        <span class="font-medium">S/ {{ "%.2f"|format(order.subtotal) }}</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Envío</span>
+                        <span class="font-medium">S/ {{ "%.2f"|format(order.shipping_cost) }}</span>
+                    </div>
+                    <div class="flex justify-between text-lg font-bold border-t pt-2">
+                        <span>Total</span>
+                        <span class="text-red-800">S/ {{ "%.2f"|format(order.total) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
