@@ -3,71 +3,61 @@
 {% block title %}Vinos del Valle - Vinos Premium de Perú{% endblock %}
 
 {% block content %}
-<!-- Hero Slider Section -->
-<section id="slider-container" class="relative h-[50vh] sm:h-[65vh] lg:h-[75vh] overflow-hidden group">
-    <!-- Slides Container -->
-    <div class="relative w-full h-full">
-        <!-- Slide 1 - Hero Wine -->
-        <div class="slide absolute inset-0 opacity-100 z-10 transition-opacity duration-1000">
-            <img src="{{ url_for('static', filename='images/hero-wine.jpg') }}" alt="Vinos Premium" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/60 to-transparent"></div>
-        </div>
+<!-- Hero Section - Modern Layout -->
+<section class="relative flex flex-col-reverse py-16 lg:pt-0 lg:flex-col lg:pb-0 bg-white">
+    <!-- Image Container - Right Side -->
+    <div class="inset-y-0 top-0 right-0 z-0 w-full max-w-2xl px-4 mx-auto md:px-0 lg:pr-0 lg:mb-0 lg:mx-0 lg:w-6/12 lg:max-w-full lg:absolute xl:px-0">
+        <!-- Decorative Shape -->
+        <svg class="absolute left-0 hidden h-full text-red-50 transform -translate-x-1/2 lg:block" viewBox="0 0 100 100" fill="currentColor" preserveAspectRatio="none slice">
+            <path d="M50 0H100L50 100H0L50 0Z"></path>
+        </svg>
         
-        <!-- Slide 2 -->
-        <div class="slide absolute inset-0 opacity-0 z-0 transition-opacity duration-1000">
-            <img src="{{ url_for('static', filename='images/slide2.jpg') }}" alt="Slide 2" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/60 to-transparent"></div>
-        </div>
-        
-        <!-- Slide 3 -->
-        <div class="slide absolute inset-0 opacity-0 z-0 transition-opacity duration-1000">
-            <img src="{{ url_for('static', filename='images/slide3.jpg') }}" alt="Slide 3" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/60 to-transparent"></div>
-        </div>
-        
-        <!-- Slide 4 -->
-        <div class="slide absolute inset-0 opacity-0 z-0 transition-opacity duration-1000">
-            <img src="{{ url_for('static', filename='images/slide4.jpg') }}" alt="Slide 4" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/75 via-black/60 to-transparent"></div>
-        </div>
+        <!-- Hero Image -->
+        <img
+            class="object-cover w-full h-56 rounded-2xl shadow-2xl lg:rounded-none lg:shadow-none md:h-96 lg:h-full transition-transform duration-500 hover:scale-105"
+            src="{{ url_for('static', filename='images/uvas2.webp') }}"
+            alt="Vinos Premium del Valle"
+        />
     </div>
     
-    <!-- Content Overlay -->
-    <div class="absolute inset-0 z-20 flex items-center h-full pointer-events-none">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white w-full">
-            <div class="pointer-events-auto opacity-100">
-                <h1 class="text-3xl sm:text-4xl md:text-6xl font-black mb-3 sm:mb-4 leading-tight tracking-tight">Vinos Premium<br><span class="bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">de Perú</span></h1>
-                <p class="text-sm sm:text-base md:text-lg mb-6 sm:mb-8 max-w-2xl font-light leading-relaxed">Descubre nuestra selección de vinos de alta calidad. Envíos a todo Perú y exportación internacional.</p>
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                    <a href="{{ url_for('wine.catalog') }}" class="bg-gradient-to-r from-red-800 to-red-900 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:from-red-900 hover:to-red-950 text-base sm:text-lg font-bold transition-all duration-200 shadow-xl hover:shadow-2xl transform hover:scale-105 text-center">
-                        Ver Catálogo
-                    </a>
-                    <a href="{{ url_for('main.about') }}" class="bg-white/15 backdrop-blur-md text-white px-6 sm:px-8 py-3 sm:py-4 rounded-lg hover:bg-white/25 text-base sm:text-lg font-semibold transition-all duration-200 border-2 border-white/60 hover:border-white text-center">
-                        📖 Conocer Más
-                    </a>
-                </div>
+    <!-- Content Container - Left Side -->
+    <div class="relative flex flex-col items-start w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl lg:pr-0">
+        <div class="mb-16 lg:my-40 lg:max-w-lg lg:pr-5">
+            <!-- Badge -->
+            <div class="inline-block px-4 py-2 mb-6 text-xs font-semibold tracking-widest text-red-800 uppercase rounded-full bg-red-100">
+                ✨ Vinos Premium
             </div>
-        </div>
-    </div>
-    
-    <!-- Navigation Buttons -->
-    <button class="prev-button absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm group pointer-events-auto opacity-0 group-hover:opacity-100" aria-label="Anterior">
-        <svg class="w-6 h-6 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
-    </button>
-    
-    <button class="next-button absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 text-white p-3 rounded-full transition-all duration-300 backdrop-blur-sm group pointer-events-auto opacity-0 group-hover:opacity-100" aria-label="Siguiente">
-        <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-        </svg>
-    </button>
-    
-    <!-- Indicators Bottom -->
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center space-x-3 bg-black/30 backdrop-blur-sm px-4 py-3 rounded-full pointer-events-auto">
-        <div class="indicators-container flex gap-2"></div>
-        <div class="border-l border-white/40 pl-3 ml-1">
-            <span class="text-white text-sm font-semibold"><span class="current-slide">1</span>/<span class="total-slides">4</span></span>
+            
+            <!-- Main Heading -->
+            <h1 class="mb-6 font-sans text-3xl font-black tracking-tight text-gray-900 sm:text-4xl lg:text-5xl leading-tight">
+                Descubre lo Mejor<br class="hidden md:block" />
+                <span class="text-red-800">de las Viñas Peruanas</span>
+            </h1>
+            
+            <!-- Description -->
+            <p class="pr-5 mb-8 text-base text-gray-700 md:text-lg leading-relaxed font-light">
+                Selección meticulosa de vinos premium producidos en las mejores regiones vinícolas del Perú. Envíos seguros a todo el país y exportación internacional.
+            </p>
+            
+            <!-- CTA Buttons -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <a
+                    href="{{ url_for('wine.catalog') }}"
+                    class="inline-flex items-center justify-center h-12 px-8 font-bold text-white transition duration-200 rounded-lg shadow-lg bg-red-800 hover:bg-red-900 focus:shadow-outline focus:outline-none transform hover:scale-105"
+                >
+                    Explorar Catálogo
+                </a>
+                <a
+                    href="{{ url_for('main.about') }}"
+                    aria-label="Conocer más sobre nosotros"
+                    class="inline-flex items-center font-semibold text-gray-800 transition-colors duration-200 hover:text-red-800 group"
+                >
+                    <span>Conocer Más</span>
+                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
         </div>
     </div>
 </section>
@@ -160,6 +150,121 @@
             </a>
         </div>
     </div>
+</section>
+
+<!-- Team Section -->
+<section class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 bg-white">
+  <div class="mx-auto mb-10 lg:max-w-xl sm:text-center">
+    <p class="inline-block px-3 py-px mb-4 text-xs font-semibold tracking-wider text-red-900 uppercase rounded-full bg-red-100">
+      Discover Our Team
+    </p>
+    <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4 leading-tight">Nuestro Equipo</h2>
+    <p class="text-base text-gray-700 md:text-lg">
+      Expertos apasionados en vinos con años de experiencia en la industria vinícola internacional.
+    </p>
+  </div>
+  <div class="grid gap-10 mx-auto sm:grid-cols-2 lg:grid-cols-4 lg:max-w-screen-lg">
+    <div>
+      <div class="relative pb-56 mb-4 rounded shadow lg:pb-64">
+        <img class="absolute object-cover w-full h-full rounded" src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=3&amp;h=750&amp;w=1260" alt="Person" />
+      </div>
+      <div class="flex flex-col sm:text-center">
+        <p class="text-lg font-bold">Oliver Aguilerra</p>
+        <p class="mb-5 text-xs text-gray-800">Product Manager</p>
+        <div class="flex items-center space-x-3 sm:justify-center">
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M24,4.6c-0.9,0.4-1.8,0.7-2.8,0.8c1-0.6,1.8-1.6,2.2-2.7c-1,0.6-2,1-3.1,1.2c-0.9-1-2.2-1.6-3.6-1.6 c-2.7,0-4.9,2.2-4.9,4.9c0,0.4,0,0.8,0.1,1.1C7.7,8.1,4.1,6.1,1.7,3.1C1.2,3.9,1,4.7,1,5.6c0,1.7,0.9,3.2,2.2,4.1 C2.4,9.7,1.6,9.5,1,9.1c0,0,0,0,0,0.1c0,2.4,1.7,4.4,3.9,4.8c-0.4,0.1-0.8,0.2-1.3,0.2c-0.3,0-0.6,0-0.9-0.1c0.6,2,2.4,3.4,4.6,3.4 c-1.7,1.3-3.8,2.1-6.1,2.1c-0.4,0-0.8,0-1.2-0.1c2.2,1.4,4.8,2.2,7.5,2.2c9.1,0,14-7.5,14-14c0-0.2,0-0.4,0-0.6 C22.5,6.4,23.3,5.5,24,4.6z"
+              ></path>
+            </svg>
+          </a>
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M22,0H2C0.895,0,0,0.895,0,2v20c0,1.105,0.895,2,2,2h11v-9h-3v-4h3V8.413c0-3.1,1.893-4.788,4.659-4.788 c1.325,0,2.463,0.099,2.795,0.143v3.24l-1.918,0.001c-1.504,0-1.795,0.715-1.795,1.763V11h4.44l-1,4h-3.44v9H22c1.105,0,2-0.895,2-2 V2C24,0.895,23.105,0,22,0z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="relative pb-56 mb-4 rounded shadow lg:pb-64">
+        <img class="absolute object-cover w-full h-full rounded" src="https://images.pexels.com/photos/2381069/pexels-photo-2381069.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=750&amp;w=1260" alt="Person" />
+      </div>
+      <div class="flex flex-col sm:text-center">
+        <p class="text-lg font-bold">Marta Clermont</p>
+        <p class="mb-5 text-xs text-gray-800">Design Team Lead</p>
+        <div class="flex items-center space-x-3 sm:justify-center">
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M24,4.6c-0.9,0.4-1.8,0.7-2.8,0.8c1-0.6,1.8-1.6,2.2-2.7c-1,0.6-2,1-3.1,1.2c-0.9-1-2.2-1.6-3.6-1.6 c-2.7,0-4.9,2.2-4.9,4.9c0,0.4,0,0.8,0.1,1.1C7.7,8.1,4.1,6.1,1.7,3.1C1.2,3.9,1,4.7,1,5.6c0,1.7,0.9,3.2,2.2,4.1 C2.4,9.7,1.6,9.5,1,9.1c0,0,0,0,0,0.1c0,2.4,1.7,4.4,3.9,4.8c-0.4,0.1-0.8,0.2-1.3,0.2c-0.3,0-0.6,0-0.9-0.1c0.6,2,2.4,3.4,4.6,3.4 c-1.7,1.3-3.8,2.1-6.1,2.1c-0.4,0-0.8,0-1.2-0.1c2.2,1.4,4.8,2.2,7.5,2.2c9.1,0,14-7.5,14-14c0-0.2,0-0.4,0-0.6 C22.5,6.4,23.3,5.5,24,4.6z"
+              ></path>
+            </svg>
+          </a>
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M22,0H2C0.895,0,0,0.895,0,2v20c0,1.105,0.895,2,2,2h11v-9h-3v-4h3V8.413c0-3.1,1.893-4.788,4.659-4.788 c1.325,0,2.463,0.099,2.795,0.143v3.24l-1.918,0.001c-1.504,0-1.795,0.715-1.795,1.763V11h4.44l-1,4h-3.44v9H22c1.105,0,2-0.895,2-2 V2C24,0.895,23.105,0,22,0z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="relative pb-56 mb-4 rounded shadow lg:pb-64">
+        <img class="absolute object-cover w-full h-full rounded" src="https://images.pexels.com/photos/3747435/pexels-photo-3747435.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=750&amp;w=1260" alt="Person" />
+      </div>
+      <div class="flex flex-col sm:text-center">
+        <p class="text-lg font-bold">Alice Melbourne</p>
+        <p class="mb-5 text-xs text-gray-800">Human Resources</p>
+        <div class="flex items-center space-x-3 sm:justify-center">
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M24,4.6c-0.9,0.4-1.8,0.7-2.8,0.8c1-0.6,1.8-1.6,2.2-2.7c-1,0.6-2,1-3.1,1.2c-0.9-1-2.2-1.6-3.6-1.6 c-2.7,0-4.9,2.2-4.9,4.9c0,0.4,0,0.8,0.1,1.1C7.7,8.1,4.1,6.1,1.7,3.1C1.2,3.9,1,4.7,1,5.6c0,1.7,0.9,3.2,2.2,4.1 C2.4,9.7,1.6,9.5,1,9.1c0,0,0,0,0,0.1c0,2.4,1.7,4.4,3.9,4.8c-0.4,0.1-0.8,0.2-1.3,0.2c-0.3,0-0.6,0-0.9-0.1c0.6,2,2.4,3.4,4.6,3.4 c-1.7,1.3-3.8,2.1-6.1,2.1c-0.4,0-0.8,0-1.2-0.1c2.2,1.4,4.8,2.2,7.5,2.2c9.1,0,14-7.5,14-14c0-0.2,0-0.4,0-0.6 C22.5,6.4,23.3,5.5,24,4.6z"
+              ></path>
+            </svg>
+          </a>
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M22,0H2C0.895,0,0,0.895,0,2v20c0,1.105,0.895,2,2,2h11v-9h-3v-4h3V8.413c0-3.1,1.893-4.788,4.659-4.788 c1.325,0,2.463,0.099,2.795,0.143v3.24l-1.918,0.001c-1.504,0-1.795,0.715-1.795,1.763V11h4.44l-1,4h-3.44v9H22c1.105,0,2-0.895,2-2 V2C24,0.895,23.105,0,22,0z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="relative pb-56 mb-4 rounded shadow lg:pb-64">
+        <img class="absolute object-cover w-full h-full rounded" src="https://images.pexels.com/photos/3931603/pexels-photo-3931603.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=750&amp;w=1260" alt="Person" />
+      </div>
+      <div class="flex flex-col sm:text-center">
+        <p class="text-lg font-bold">John Doe</p>
+        <p class="mb-5 text-xs text-gray-800">Good guy</p>
+        <div class="flex items-center space-x-3 sm:justify-center">
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M24,4.6c-0.9,0.4-1.8,0.7-2.8,0.8c1-0.6,1.8-1.6,2.2-2.7c-1,0.6-2,1-3.1,1.2c-0.9-1-2.2-1.6-3.6-1.6 c-2.7,0-4.9,2.2-4.9,4.9c0,0.4,0,0.8,0.1,1.1C7.7,8.1,4.1,6.1,1.7,3.1C1.2,3.9,1,4.7,1,5.6c0,1.7,0.9,3.2,2.2,4.1 C2.4,9.7,1.6,9.5,1,9.1c0,0,0,0,0,0.1c0,2.4,1.7,4.4,3.9,4.8c-0.4,0.1-0.8,0.2-1.3,0.2c-0.3,0-0.6,0-0.9-0.1c0.6,2,2.4,3.4,4.6,3.4 c-1.7,1.3-3.8,2.1-6.1,2.1c-0.4,0-0.8,0-1.2-0.1c2.2,1.4,4.8,2.2,7.5,2.2c9.1,0,14-7.5,14-14c0-0.2,0-0.4,0-0.6 C22.5,6.4,23.3,5.5,24,4.6z"
+              ></path>
+            </svg>
+          </a>
+          <a href="/" class="text-gray-600 transition-colors duration-300 hover:text-red-800">
+            <svg viewBox="0 0 24 24" fill="currentColor" class="h-5">
+              <path
+                d="M22,0H2C0.895,0,0,0.895,0,2v20c0,1.105,0.895,2,2,2h11v-9h-3v-4h3V8.413c0-3.1,1.893-4.788,4.659-4.788 c1.325,0,2.463,0.099,2.795,0.143v3.24l-1.918,0.001c-1.504,0-1.795,0.715-1.795,1.763V11h4.44l-1,4h-3.44v9H22c1.105,0,2-0.895,2-2 V2C24,0.895,23.105,0,22,0z"
+              ></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Features -->
