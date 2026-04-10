@@ -5,89 +5,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from functools import wraps
 from models import Wine, Order
 from services import CartService, OrderService
-import os
-import uuid
-from werkzeug.utils import secure_filename
-from flask import current_app
+import cloudinary_service
 import logging
 
 logger = logging.getLogger(__name__)
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
-
-
-def allowed_file(filename):
-    """Check if file extension is allowed"""
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
-def save_wine_image(file):
-    """
-    Save uploaded wine image
-    
-    Args:
-        file: FileStorage object from request.files
-        
-    Returns:
-        str: URL path to saved image, or None if error
-    """
-    if not file or file.filename == '':
-        return None
-    
-    if not allowed_file(file.filename):
-        logger.error(f"File type not allowed: {file.filename}")
-        return None
-    
-    try:
-        # Generate unique filename
-        ext = file.filename.rsplit('.', 1)[1].lower()
-        filename = f"{uuid.uuid4().hex}.{ext}"
-        
-        # Ensure upload directory exists
-        upload_folder = os.path.join(current_app.root_path, 'static', 'images', 'wines')
-        os.makedirs(upload_folder, exist_ok=True)
-        
-        # Save file
-        filepath = os.path.join(upload_folder, filename)
-        file.save(filepath)
-        
-        # Return URL path
-        return f"/static/images/wines/{filename}"
-        
-    except Exception as e:
-        logger.error(f"Error saving wine image: {e}")
-        return None
-
-
-def delete_wine_image(image_url):
-    """
-    Delete wine image file
-    
-    Args:
-        image_url: URL path to image (e.g., /static/images/wines/abc123.jpg)
-        
-    Returns:
-        bool: True if deleted successfully, False otherwise
-    """
-    if not image_url or not image_url.startswith('/static/images/wines/'):
-        return False
-    
-    try:
-        # Extract filename from URL
-        filename = image_url.split('/')[-1]
-        filepath = os.path.join(current_app.root_path, 'static', 'images', 'wines', filename)
-        
-        # Delete file if it exists
-        if os.path.exists(filepath):
-            os.remove(filepath)
-            logger.info(f"Deleted wine image: {filename}")
-            return True
-            
-    except Exception as e:
-        logger.error(f"Error deleting wine image: {e}")
-    
-    return False
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -139,15 +60,24 @@ def add_wine():
                              wine=None,
                              cart_count=cart_count)
 
-    # Handle image upload
+    # Handle image upload to Cloudinary
     image_url = request.form.get('image_url')  # Keep URL field as fallback
+    wine_name = request.form.get('name', 'wine')
 
     if 'image_file' in request.files:
         file = request.files['image_file']
         if file and file.filename != '':
-            uploaded_url = save_wine_image(file)
-            if uploaded_url:
-                image_url = uploaded_url
+            # Upload to Cloudinary
+            upload_result = cloudinary_service.upload_wine_image(
+                file, 
+                wine_name=wine_name,
+                auto_optimize=True
+            )
+            
+            if upload_result:
+                # Store secure_url (encrypted/safe for HTTPS)
+                image_url = upload_result['secure_url']
+                logger.info(f"Image uploaded to Cloudinary: {upload_result['public_id']}")
             else:
                 flash('Error al subir la imagen. Usando URL proporcionada.', 'warning')
 
@@ -192,19 +122,31 @@ def edit_wine(wine_id):
                              wine=wine,
                              cart_count=cart_count)
 
-    # Handle image upload
+    # Handle image upload to Cloudinary
     image_url = request.form.get('image_url')  # Keep URL field as fallback
     old_image_url = wine.get('image_url')
+    wine_name = request.form.get('name', 'wine')
 
     if 'image_file' in request.files:
         file = request.files['image_file']
         if file and file.filename != '':
-            uploaded_url = save_wine_image(file)
-            if uploaded_url:
-                # Delete old image if it was uploaded (not a default/external URL)
-                if old_image_url and old_image_url.startswith('/static/images/wines/'):
-                    delete_wine_image(old_image_url)
-                image_url = uploaded_url
+            # Upload new image to Cloudinary
+            upload_result = cloudinary_service.upload_wine_image(
+                file,
+                wine_name=wine_name,
+                auto_optimize=True
+            )
+            
+            if upload_result:
+                # Store secure_url
+                image_url = upload_result['secure_url']
+                
+                # Delete old image from Cloudinary if it exists
+                if old_image_url:
+                    public_id = cloudinary_service.extract_public_id_from_url(old_image_url)
+                    if public_id:
+                        cloudinary_service.delete_wine_image(public_id)
+                        logger.info(f"Deleted old image: {public_id}")
             else:
                 flash('Error al subir la imagen. Manteniendo imagen anterior.', 'warning')
                 image_url = old_image_url
@@ -241,6 +183,17 @@ def edit_wine(wine_id):
 @admin_required
 def delete_wine(wine_id):
     """Delete wine"""
+    # Get wine to find image URL
+    wine = Wine.get_by_id(wine_id)
+    
+    # Delete image from Cloudinary if it exists
+    if wine and wine.get('image_url'):
+        public_id = cloudinary_service.extract_public_id_from_url(wine['image_url'])
+        if public_id:
+            cloudinary_service.delete_wine_image(public_id)
+            logger.info(f"Deleted image for wine {wine_id}: {public_id}")
+    
+    # Delete wine from database
     success = Wine.delete(wine_id)
 
     if success:

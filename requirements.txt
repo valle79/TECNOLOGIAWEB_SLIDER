@@ -11,6 +11,12 @@ python-dotenv>=1.0.0
 # Security & Authentication
 bcrypt>=4.1.2
 
+# Cloud Storage - Cloudinary
+cloudinary>=1.36.0
+
+# Image Processing
+Pillow>=10.0.0
+
 # Utilities
 Werkzeug>=3.0.1
 

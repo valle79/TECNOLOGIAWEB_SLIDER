@@ -8,6 +8,7 @@ Built with Flask, MySQL, and modern web technologies.
 from flask import Flask
 from config import config
 from database import Database
+from cloudinary_config import CloudinaryConfig
 import logging
 import os
 
@@ -40,6 +41,14 @@ def create_app(config_name='development'):
     except Exception as e:
         logger.error(f"Failed to initialize database: {e}")
         raise
+    
+    # Initialize Cloudinary for image storage
+    try:
+        CloudinaryConfig.initialize()
+        logger.info("Cloudinary initialized successfully")
+    except Exception as e:
+        logger.warning(f"Cloudinary initialization warning: {e}")
+        logger.warning("Image uploads will not work without Cloudinary credentials")
     
     # Register blueprints
     from main import main_bp

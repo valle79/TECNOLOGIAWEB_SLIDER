@@ -18,8 +18,12 @@ class Config:
     DB_PASSWORD = os.getenv('DB_PASSWORD', 'Mysql@2026Luis')
     DB_NAME = os.getenv('DB_NAME', 'wine_ecommerce')
     
+    # Cloudinary Configuration (Cloud Image Storage)
+    CLOUDINARY_CLOUD_NAME = os.getenv('CLOUDINARY_CLOUD_NAME')
+    CLOUDINARY_API_KEY = os.getenv('CLOUDINARY_API_KEY')
+    CLOUDINARY_API_SECRET = os.getenv('CLOUDINARY_API_SECRET')
+    
     # Upload settings
-    UPLOAD_FOLDER = os.getenv('UPLOAD_FOLDER', 'static/images/wines')
     MAX_CONTENT_LENGTH = int(os.getenv('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))  # 16MB
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     
