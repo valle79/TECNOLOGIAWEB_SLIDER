@@ -1,63 +1,164 @@
 {% extends "base.html" %}
 
-{% block title %}Nosotros - Vinos del Valle{% endblock %}
+{% block title %}Nosotros - Vitivinícola San Roque{% endblock %}
 
 {% block content %}
-<div class="bg-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h1 class="text-4xl font-bold text-gray-900 mb-4">Sobre Nosotros</h1>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Vinos del Valle es una empresa peruana dedicada a la producción y comercialización de vinos premium.
+<!-- Hero Section -->
+<section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-red-900 opacity-90"></div>
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-amber-400/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-96 h-96 bg-red-600/20 rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="relative py-20 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center text-white">
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
+                Nuestra <span class="text-amber-300">Historia</span>
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl font-light max-w-3xl mx-auto leading-relaxed opacity-95">
+                Más de 20 años de pasión, tradición y excelencia en la producción de vinos premium peruanos
             </p>
         </div>
+    </div>
+</section>
 
-        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Nuestra Historia</h2>
-                <p class="text-gray-600 mb-4">
-                    Desde hace más de 20 años, nos dedicamos a producir vinos de alta calidad en los valles de Ica y Arequipa, 
-                    utilizando las mejores uvas y técnicas tradicionales combinadas con tecnología moderna.
-                </p>
-                <p class="text-gray-600">
-                    Nuestros vinos han ganado reconocimiento tanto a nivel nacional como internacional, 
-                    exportando a más de 15 países alrededor del mundo.
-                </p>
-            </div>
-
-            <div>
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Nuestra Misión</h2>
-                <p class="text-gray-600 mb-4">
-                    Producir vinos de excelencia que representen lo mejor de la tierra peruana, 
-                    manteniendo los más altos estándares de calidad y sostenibilidad.
-                </p>
-                <p class="text-gray-600">
-                    Queremos llevar el sabor de Perú a cada rincón del mundo, 
-                    compartiendo nuestra pasión por el vino con todos nuestros clientes.
-                </p>
-            </div>
-        </div>
-
-        <div class="mt-16">
-            <h2 class="text-2xl font-bold text-gray-900 mb-8 text-center">Nuestros Valores</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="text-4xl mb-4">🍇</div>
-                    <h3 class="text-xl font-semibold mb-2">Calidad</h3>
-                    <p class="text-gray-600">Seleccionamos las mejores uvas para garantizar vinos excepcionales</p>
+<!-- Nuestra Historia Section -->
+<section class="py-16 sm:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="order-2 lg:order-1">
+                <div class="bg-red-50 rounded-2xl p-8 sm:p-12 border border-red-100 shadow-lg">
+                    <h2 class="text-4xl sm:text-5xl font-black text-red-900 mb-6">Nuestra Historia</h2>
+                    <p class="text-gray-700 text-lg mb-6 leading-relaxed font-light">
+                        Desde hace más de 20 años, San Roque se dedica a producir vinos de <span class="font-bold text-red-800">alta calidad</span> en los valles de Ica y Arequipa. Combinamos <span class="font-bold text-red-800">técnicas tradicionales</span> con <span class="font-bold text-red-800">tecnología moderna</span> para crear vinos excepcionales.
+                    </p>
+                    <p class="text-gray-700 text-lg leading-relaxed font-light">
+                        Nuestros vinos han ganado <span class="font-bold text-red-800">reconocimiento internacional</span>, exportando a más de 15 países. Cada botella representa nuestro compromiso con la excelencia y la pasión por el arte vitivinícola.
+                    </p>
                 </div>
-                <div class="text-center">
-                    <div class="text-4xl mb-4">🌱</div>
-                    <h3 class="text-xl font-semibold mb-2">Sostenibilidad</h3>
-                    <p class="text-gray-600">Cuidamos el medio ambiente en cada etapa de producción</p>
-                </div>
-                <div class="text-center">
-                    <div class="text-4xl mb-4">❤️</div>
-                    <h3 class="text-xl font-semibold mb-2">Pasión</h3>
-                    <p class="text-gray-600">Amor por el vino en cada botella que producimos</p>
+            </div>
+            
+            <div class="order-1 lg:order-2">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-red-700 rounded-2xl blur-lg opacity-75 group-hover:opacity-100 transition duration-500"></div>
+                    <div class="relative bg-white rounded-2xl p-1 overflow-hidden">
+                        <img src="{{ url_for('static', filename='images/sanroque.png') }}" alt="San Roque Logo" 
+                             class="w-full h-96 object-contain p-8 bg-red-50">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+<!-- Misión y Visión -->
+<section class="py-16 sm:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-16 text-center">
+            <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">Nuestra Misión & Visión</h2>
+            <div class="w-20 h-1 bg-red-800 mx-auto rounded-full"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Misión Card -->
+            <div class="group">
+                <div class="absolute inset-0 bg-red-700 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500 -z-10 transform scale-95 group-hover:scale-100"></div>
+                <div class="relative bg-white rounded-2xl p-8 sm:p-10 border-2 border-red-100 group-hover:border-transparent transition duration-300 group-hover:shadow-2xl">
+                    <div class="text-5xl mb-4">🎯</div>
+                    <h3 class="text-2xl sm:text-3xl font-black text-red-900 mb-4">Nuestra Misión</h3>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        Producir vinos de <span class="font-bold text-red-800">excelencia</span> que representen lo mejor de la tierra peruana, manteniendo los más altos estándares de <span class="font-bold text-red-800">calidad y sostenibilidad</span>.
+                    </p>
+                    <p class="text-gray-700 mt-4 leading-relaxed font-light">
+                        Llevar el sabor de Perú a cada rincón del mundo, compartiendo nuestra <span class="font-bold text-red-800">pasión</span> por el vino con todos nuestros clientes.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Visión Card -->
+            <div class="group">
+                <div class="absolute inset-0 bg-amber-600 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-500 -z-10 transform scale-95 group-hover:scale-100"></div>
+                <div class="relative bg-white rounded-2xl p-8 sm:p-10 border-2 border-amber-100 group-hover:border-transparent transition duration-300 group-hover:shadow-2xl">
+                    <div class="text-5xl mb-4">🌟</div>
+                    <h3 class="text-2xl sm:text-3xl font-black text-amber-900 mb-4">Nuestra Visión</h3>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        Ser la marca de vinos peruanos más <span class="font-bold text-amber-800">reconocida y respetada</span> a nivel mundial, símbolo de <span class="font-bold text-amber-800">calidad</span> e <span class="font-bold text-amber-800">innovación</span>.
+                    </p>
+                    <p class="text-gray-700 mt-4 leading-relaxed font-light">
+                        Crear una experiencia única en cada botella, conectando generaciones a través de la excelencia y la tradición vitivinícola peruana.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Nuestros Valores -->
+<section class="py-16 sm:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-16 text-center">
+            <h2 class="text-4xl sm:text-5xl font-black text-gray-900 mb-4">Nuestros Valores</h2>
+            <div class="w-20 h-1 bg-red-800 mx-auto rounded-full"></div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Calidad -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-red-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-75 transition duration-500"></div>
+                <div class="relative bg-white rounded-2xl p-8 sm:p-10 border-2 border-red-100 group-hover:border-transparent group-hover:shadow-2xl transition duration-300 h-full">
+                    <div class="text-6xl mb-6 transform group-hover:scale-125 transition duration-300">🍇</div>
+                    <h3 class="text-2xl font-black text-red-900 mb-4">Calidad</h3>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        Seleccionamos solo las mejores uvas y aplicamos procesos rigurosos para garantizar vinos excepcionales en cada botella.
+                    </p>
+                    <div class="mt-6 h-1 w-16 bg-red-700 rounded-full group-hover:w-full transition-all duration-300"></div>
+                </div>
+            </div>
+            
+            <!-- Sostenibilidad -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-green-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-75 transition duration-500"></div>
+                <div class="relative bg-white rounded-2xl p-8 sm:p-10 border-2 border-green-100 group-hover:border-transparent group-hover:shadow-2xl transition duration-300 h-full">
+                    <div class="text-6xl mb-6 transform group-hover:scale-125 transition duration-300">🌱</div>
+                    <h3 class="text-2xl font-black text-green-900 mb-4">Sostenibilidad</h3>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        Cuidamos el medio ambiente en cada etapa de producción, respetando la naturaleza y los recursos para las futuras generaciones.
+                    </p>
+                    <div class="mt-6 h-1 w-16 bg-green-700 rounded-full group-hover:w-full transition-all duration-300"></div>
+                </div>
+            </div>
+            
+            <!-- Pasión -->
+            <div class="group relative">
+                <div class="absolute inset-0 bg-amber-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-75 transition duration-500"></div>
+                <div class="relative bg-white rounded-2xl p-8 sm:p-10 border-2 border-amber-100 group-hover:border-transparent group-hover:shadow-2xl transition duration-300 h-full">
+                    <div class="text-6xl mb-6 transform group-hover:scale-125 transition duration-300">❤️</div>
+                    <h3 class="text-2xl font-black text-amber-900 mb-4">Pasión</h3>
+                    <p class="text-gray-700 leading-relaxed font-light">
+                        El amor por el vino y el arte vitivinícola se refleja en cada proceso, creando experiencias memorables para nuestros clientes.
+                    </p>
+                    <div class="mt-6 h-1 w-16 bg-amber-700 rounded-full group-hover:w-full transition-all duration-300"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-16 sm:py-20 bg-red-900 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white rounded-full mix-blend-multiply filter blur-3xl"></div>
+    </div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+        <h2 class="text-4xl sm:text-5xl font-black mb-6">Descubre Nuestros Vinos</h2>
+        <p class="text-lg sm:text-xl mb-8 max-w-2xl mx-auto font-light opacity-95">
+            Cada botella cuenta una historia de tradición, pasión y excelencia
+        </p>
+        <a href="{{ url_for('wine.catalog') }}" class="inline-block bg-white text-red-900 px-10 py-4 rounded-xl font-bold text-lg hover:bg-amber-300 hover:text-red-900 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-2xl">
+            🍷 Ver Catálogo Completo
+        </a>
+    </div>
+</section>
 {% endblock %}
