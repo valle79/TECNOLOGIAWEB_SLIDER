@@ -1,218 +1,343 @@
 {% extends "base.html" %}
 
-{% block title %}Contacto - Vitivinícola San Roque{% endblock %}
+{% block title %}Contacto | Vitivinícola San Roque{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+
+<!-- HERO -->
 <section class="relative overflow-hidden">
-    <div class="absolute inset-0 bg-red-900 opacity-90"></div>
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="absolute top-0 right-0 w-96 h-96 bg-amber-400/20 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-96 h-96 bg-red-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-red-900 via-red-800 to-red-700 opacity-95"></div>
+
+    <div class="relative py-20 sm:py-28 max-w-7xl mx-auto px-6 text-center text-white">
+        <h1 class="text-5xl md:text-6xl font-extrabold tracking-tight mb-4">
+            Ponte en <span class="text-amber-300">Contacto</span>
+        </h1>
+        <p class="text-lg md:text-xl max-w-2xl mx-auto opacity-90">
+            Nuestro equipo está listo para ayudarte. Respuesta garantizada en menos de 24 horas.
+        </p>
     </div>
-    
-    <div class="relative py-20 sm:py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div class="text-center text-white">
-            <h1 class="text-5xl sm:text-6xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
-                Ponte en <span class="text-amber-300">Contacto</span>
-            </h1>
-            <p class="text-lg sm:text-xl md:text-2xl font-light max-w-3xl mx-auto leading-relaxed opacity-95">
-                Estamos aquí para ayudarte. Contáctanos y te responderemos rápidamente
+</section>
+
+
+
+<!-- CONTACT FORM PRO -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6 grid gap-10 lg:grid-cols-2">
+
+        <!-- FORM -->
+        <div class="order-2 lg:order-1">
+            <div class="bg-white rounded-2xl border border-gray-200 p-8 sm:p-10 shadow-lg">
+
+                <h2 class="text-3xl font-extrabold text-gray-900 mb-2">
+                    Envíanos un mensaje
+                </h2>
+                <p class="text-gray-500 mb-6">
+                    Completa el formulario y te responderemos en menos de 24 horas.
+                </p>
+
+                <form method="POST"
+                      action="{{ url_for('main.contact') }}"
+                      class="space-y-5"
+                      novalidate>
+
+                    <!-- CSRF -->
+                    {% if csrf_token %}
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    {% endif %}
+
+                    <!-- Nombre -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            Nombre completo *
+                        </label>
+                        <input type="text" name="name" required minlength="3"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-300 focus:border-red-700 outline-none transition"
+                               placeholder="Ej: Juan Pérez">
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            Correo electrónico *
+                        </label>
+                        <input type="email" name="email" required
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-300 focus:border-red-700 outline-none transition"
+                               placeholder="correo@email.com">
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            Teléfono
+                        </label>
+                        <input type="tel" name="phone" pattern="[0-9+ ]{7,15}"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-300 focus:border-red-700 outline-none transition"
+                               placeholder="+51 999 999 999">
+                    </div>
+
+                    <!-- Asunto -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            Asunto *
+                        </label>
+                        <input type="text" name="subject" required minlength="5"
+                               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-300 focus:border-red-700 outline-none transition"
+                               placeholder="Motivo del mensaje">
+                    </div>
+
+                    <!-- Mensaje -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">
+                            Mensaje *
+                        </label>
+                        <textarea name="message" rows="5" required minlength="10"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-300 focus:border-red-700 outline-none transition resize-none"
+                                  placeholder="Escribe tu mensaje aquí..."></textarea>
+                    </div>
+
+                    <!-- Honeypot anti-spam -->
+                    <input type="text" name="website" class="hidden">
+
+                    <!-- Botón -->
+                    <button type="submit"
+                            class="w-full bg-red-800 text-white py-3 rounded-xl font-semibold hover:bg-red-900 transition flex items-center justify-center gap-2">
+                        🚀 Enviar mensaje
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+<!-- INFO PRO -->
+<div class="flex flex-col justify-center space-y-8">
+
+    <!-- Heading -->
+    <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-2">
+            ¿Por qué elegirnos?
+        </h2>
+        <p class="text-gray-500">
+            Más que vinos, ofrecemos experiencia, calidad y confianza.
+        </p>
+    </div>
+
+    <!-- Features -->
+    <div class="space-y-5">
+
+        <div class="flex items-start gap-4">
+            <div class="text-xl bg-red-100 text-red-800 p-3 rounded-xl">⚡</div>
+            <div>
+                <p class="font-semibold text-gray-800">Respuesta rápida</p>
+                <p class="text-sm text-gray-500">Atendemos tus consultas en menos de 24 horas.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+            <div class="text-xl bg-blue-100 text-blue-800 p-3 rounded-xl">👥</div>
+            <div>
+                <p class="font-semibold text-gray-800">Atención personalizada</p>
+                <p class="text-sm text-gray-500">Te asesoramos según tus necesidades y gustos.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+            <div class="text-xl bg-amber-100 text-amber-800 p-3 rounded-xl">🎁</div>
+            <div>
+                <p class="font-semibold text-gray-800">Beneficios exclusivos</p>
+                <p class="text-sm text-gray-500">Promociones y descuentos para nuestros clientes.</p>
+            </div>
+        </div>
+
+        <div class="flex items-start gap-4">
+            <div class="text-xl bg-green-100 text-green-800 p-3 rounded-xl">🌍</div>
+            <div>
+                <p class="font-semibold text-gray-800">Envíos internacionales</p>
+                <p class="text-sm text-gray-500">Llevamos nuestros vinos a diferentes partes del mundo.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Quote Card -->
+    <div class="relative bg-white border border-gray-200 p-6 rounded-2xl shadow-md">
+
+        <div class="absolute -top-4 left-6 text-4xl">🍷</div>
+
+        <p class="text-gray-600 italic mt-4">
+            "Tu satisfacción es nuestra prioridad. Nos esforzamos por brindarte la mejor experiencia en cada botella."
+        </p>
+
+        <div class="mt-4 flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-800 text-white flex items-center justify-center rounded-full font-bold">
+                SR
+            </div>
+            <div>
+                <p class="font-semibold text-gray-800">Equipo San Roque</p>
+                <p class="text-xs text-gray-500">Atención al cliente</p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+</section>
+
+<!-- MAP PRO -->
+<section class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-6">
+
+        <!-- Header -->
+        <div class="text-center mb-10">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">
+                Nuestra Ubicación
+            </h2>
+            <p class="text-gray-500 mt-2">
+                Visítanos en el corazón de San Vicente de Cañete 🍷
             </p>
         </div>
+
+        <!-- Grid -->
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+
+            <!-- MAP -->
+            <div class="w-full h-[420px] rounded-2xl overflow-hidden border shadow-md">
+                <iframe 
+                    class="w-full h-full"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps?q=Ovalo+Grau+San+Vicente+de+Cañete+Peru&output=embed">
+                </iframe>
+            </div>
+
+            <!-- INFO -->
+            <div class="space-y-6">
+
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">
+                        Punto de atención
+                    </h3>
+                    <p class="text-gray-600">
+                        Nos encontramos en una ubicación estratégica, de fácil acceso para todos nuestros clientes.
+                    </p>
+                </div>
+
+                <!-- Details -->
+                <div class="space-y-4">
+
+                    <div class="flex items-start gap-4">
+                        <div class="bg-red-100 text-red-800 p-3 rounded-xl">📍</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Dirección</p>
+                            <p class="text-sm text-gray-500">
+                                Óvalo Grau, San Vicente de Cañete, Perú
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="bg-blue-100 text-blue-800 p-3 rounded-xl">🕒</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Horario</p>
+                            <p class="text-sm text-gray-500">
+                                Lunes a Sábado: 9:00 AM – 7:00 PM
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-4">
+                        <div class="bg-green-100 text-green-800 p-3 rounded-xl">🚗</div>
+                        <div>
+                            <p class="font-semibold text-gray-800">Acceso</p>
+                            <p class="text-sm text-gray-500">
+                                Zona céntrica con acceso vehicular y transporte público.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- CTA -->
+                <a href="https://www.google.com/maps?q=Ovalo+Grau+San+Vicente+de+Cañete+Peru"
+                   target="_blank"
+                   class="inline-block mt-4 bg-red-800 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-900 transition">
+                    📍 Ver en Google Maps
+                </a>
+
+            </div>
+
+        </div>
+
     </div>
 </section>
 
-<!-- Contact Section -->
-<section class="py-16 sm:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            <!-- Email Card -->
-            <div class="group">
-                <div class="absolute inset-0 bg-red-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition duration-500 -z-10 transform scale-95 group-hover:scale-100"></div>
-                <div class="relative bg-white rounded-2xl p-8 border-2 border-red-100 group-hover:border-transparent group-hover:shadow-2xl transition duration-300 h-full overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-red-100 rounded-full -mr-8 -mt-8 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative">
-                        <div class="text-5xl mb-4">📧</div>
-                        <h3 class="text-2xl font-bold text-red-900 mb-4">Email</h3>
-                        <div class="space-y-3">
-                            <p class="text-gray-700 font-semibold text-lg">
-                                <a href="mailto:info@vinossanroque.com" class="hover:text-red-800 transition duration-300">
-                                    info@vinossanroque.com
-                                </a>
-                            </p>
-                            <p class="text-gray-700 font-semibold text-lg">
-                                <a href="mailto:ventas@vinossanroque.com" class="hover:text-red-800 transition duration-300">
-                                    ventas@vinossanroque.com
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<!-- SOCIAL PRO -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-6 text-center">
 
-            <!-- Phone Card -->
-            <div class="group">
-                <div class="absolute inset-0 bg-blue-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition duration-500 -z-10 transform scale-95 group-hover:scale-100"></div>
-                <div class="relative bg-white rounded-2xl p-8 border-2 border-blue-100 group-hover:border-transparent group-hover:shadow-2xl transition duration-300 h-full overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-blue-100 rounded-full -mr-8 -mt-8 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative">
-                        <div class="text-5xl mb-4">📱</div>
-                        <h3 class="text-2xl font-bold text-blue-900 mb-4">Teléfono</h3>
-                        <div class="space-y-3">
-                            <p class="text-gray-700 font-semibold text-lg">
-                                <a href="tel:+51985928062" class="hover:text-blue-800 transition duration-300">
-                                    +51 985 928 062
-                                </a>
-                            </p>
-                            <p class="text-gray-700 font-semibold text-lg">
-                                <a href="tel:+51999888778" class="hover:text-blue-800 transition duration-300">
-                                    +51 999 888 778
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Heading -->
+        <h2 class="text-3xl font-extrabold text-gray-900 mb-2">
+            Síguenos en redes
+        </h2>
+        <p class="text-gray-500 mb-10">
+            Mantente al día con nuestras novedades, promociones y eventos exclusivos.
+        </p>
 
-            <!-- Location Card -->
-            <div class="group">
-                <div class="absolute inset-0 bg-amber-600 rounded-2xl blur-lg opacity-0 group-hover:opacity-100 transition duration-500 -z-10 transform scale-95 group-hover:scale-100"></div>
-                <div class="relative bg-white rounded-2xl p-8 border-2 border-amber-100 group-hover:border-transparent group-hover:shadow-2xl transition duration-300 h-full overflow-hidden">
-                    <div class="absolute top-0 right-0 w-24 h-24 bg-amber-100 rounded-full -mr-8 -mt-8 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative">
-                        <div class="text-5xl mb-4">📍</div>
-                        <h3 class="text-2xl font-bold text-amber-900 mb-4">Dirección</h3>
-                        <div class="space-y-2">
-                            <p class="text-gray-700 font-semibold text-lg">Av. Principal 123</p>
-                            <p class="text-gray-700 font-semibold text-lg">Lima, Perú</p>
-                            <p class="text-gray-600 text-sm mt-3">
-                                <span class="font-semibold">Horario:</span><br>
-                                L-V: 9:00 AM - 6:00 PM<br>
-                                Sábado: 9:00 AM - 1:00 PM
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Social Icons -->
+        <div class="flex flex-wrap justify-center gap-6">
+
+            <!-- Facebook -->
+            <a href="#" target="_blank"
+               class="group w-14 h-14 flex items-center justify-center rounded-2xl bg-white border shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
+                <svg class="w-7 h-7 text-gray-600 group-hover:text-blue-600 transition"
+                     fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22 12a10 10 0 10-11.5 9.87v-6.99H7.9V12h2.6V9.8c0-2.56 1.52-3.98 3.84-3.98 1.11 0 2.27.2 2.27.2v2.5h-1.28c-1.26 0-1.65.78-1.65 1.58V12h2.8l-.45 2.88h-2.35v6.99A10 10 0 0022 12z"/>
+                </svg>
+            </a>
+
+            <!-- Instagram -->
+            <a href="#" target="_blank"
+               class="group w-14 h-14 flex items-center justify-center rounded-2xl bg-white border shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
+                <svg class="w-7 h-7 text-gray-600 group-hover:text-pink-600 transition"
+                     fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M7 2C4.8 2 3 3.8 3 6v12c0 2.2 1.8 4 4 4h10c2.2 0 4-1.8 
+                    4-4V6c0-2.2-1.8-4-4-4H7zm5 5a5 5 0 110 10 5 5 0 010-10zm6.5-.8a1.2 
+                    1.2 0 110 2.4 1.2 1.2 0 010-2.4zM12 9a3 3 0 100 6 3 3 0 000-6z"/>
+                </svg>
+            </a>
+
+            <!-- Twitter/X -->
+            <a href="#" target="_blank"
+               class="group w-14 h-14 flex items-center justify-center rounded-2xl bg-white border shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
+                <svg class="w-7 h-7 text-gray-600 group-hover:text-black transition"
+                     fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18.9 2H22l-6.5 7.4L23 22h-6.8l-5.3-6.9L4.8 
+                    22H1.7l7-8L1 2h6.9l4.8 6.3L18.9 2z"/>
+                </svg>
+            </a>
+
+            <!-- TikTok -->
+            <a href="#" target="_blank"
+               class="group w-14 h-14 flex items-center justify-center rounded-2xl bg-white border shadow-sm hover:shadow-xl hover:-translate-y-1 transition">
+                <svg class="w-7 h-7 text-gray-600 group-hover:text-black transition"
+                     fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 3c.3 1.8 1.7 3.2 3.5 3.5v3.1c-1.4 
+                    0-2.7-.4-3.8-1.1v6.2a5.5 5.5 0 11-5.5-5.5c.3 
+                    0 .6 0 .9.1v3.2a2.3 2.3 0 102.3 2.3V3h2.6z"/>
+                </svg>
+            </a>
+
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-12">
-            <!-- Contact Form -->
-            <div class="order-2 lg:order-1">
-                <div class="bg-white rounded-2xl border-2 border-gray-200 p-8 sm:p-12 shadow-lg">
-                    <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mb-8">Envíanos un Mensaje</h2>
-                    
-                    <form class="space-y-6">
-                        <div class="group">
-                            <label for="name" class="block text-sm font-bold text-gray-800 mb-2">Nombre Completo</label>
-                            <input type="text" id="name" name="name" required
-                                   class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition duration-300 font-medium placeholder:text-gray-400"
-                                   placeholder="Tu nombre">
-                        </div>
-
-                        <div class="group">
-                            <label for="email" class="block text-sm font-bold text-gray-800 mb-2">Email</label>
-                            <input type="email" id="email" name="email" required
-                                   class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition duration-300 font-medium placeholder:text-gray-400"
-                                   placeholder="tu@email.com">
-                        </div>
-
-                        <div class="group">
-                            <label for="phone" class="block text-sm font-bold text-gray-800 mb-2">Teléfono</label>
-                            <input type="tel" id="phone" name="phone"
-                                   class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition duration-300 font-medium placeholder:text-gray-400"
-                                   placeholder="+51 999 123 456">
-                        </div>
-
-                        <div class="group">
-                            <label for="subject" class="block text-sm font-bold text-gray-800 mb-2">Asunto</label>
-                            <input type="text" id="subject" name="subject" required
-                                   class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition duration-300 font-medium placeholder:text-gray-400"
-                                   placeholder="¿Cuál es tu consulta?">
-                        </div>
-
-                        <div class="group">
-                            <label for="message" class="block text-sm font-bold text-gray-800 mb-2">Mensaje</label>
-                            <textarea id="message" name="message" rows="6" required
-                                      class="w-full px-4 py-4 border-2 border-gray-300 rounded-xl focus:border-red-800 focus:outline-none focus:ring-2 focus:ring-red-200 transition duration-300 font-medium resize-none placeholder:text-gray-400"
-                                      placeholder="Cuéntanos lo que necesitas..."></textarea>
-                        </div>
-
-                        <button type="submit"
-                                class="w-full bg-red-800 text-white px-8 py-4 rounded-xl hover:bg-red-900 font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:scale-105">
-                            🚀 Enviar Mensaje
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <!-- Info Section -->
-            <div class="order-1 lg:order-2">
-                <div class="bg-red-50 rounded-2xl p-8 sm:p-12 border-2 border-red-100">
-                    <h2 class="text-3xl sm:text-4xl font-black text-red-900 mb-8">¿Por qué contactarnos?</h2>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start gap-4">
-                            <div class="text-3xl flex-shrink-0">⚡</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-red-900 mb-2">Respuesta Rápida</h3>
-                                <p class="text-gray-700 font-light">Te respondemos en menos de 24 horas</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="text-3xl flex-shrink-0">👥</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-red-900 mb-2">Equipo Especializado</h3>
-                                <p class="text-gray-700 font-light">Profesionales listos para asesorarte</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="text-3xl flex-shrink-0">🎁</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-red-900 mb-2">Ofertas Exclusivas</h3>
-                                <p class="text-gray-700 font-light">Descuentos especiales para clientes nuevos</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-4">
-                            <div class="text-3xl flex-shrink-0">🌍</div>
-                            <div>
-                                <h3 class="text-xl font-bold text-red-900 mb-2">Envíos Internacionales</h3>
-                                <p class="text-gray-700 font-light">Llevamos nuestros vinos a todo el mundo</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-10 p-6 bg-white rounded-xl border-2 border-red-200">
-                        <p class="text-gray-700 font-light text-center italic">
-                            "Nuestro compromiso es brindarte la mejor experiencia. Tu satisfacción es nuestra prioridad."
-                        </p>
-                        <p class="text-red-900 font-bold text-center mt-4">— Equipo San Roque</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Map Section (Optional) -->
-<section class="py-16 sm:py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mb-8 text-center">Síguenos en Redes</h2>
-        <div class="text-center">
-            <div class="inline-flex gap-6">
-                <a href="#" class="text-4xl hover:scale-125 transition transform duration-300">📘</a>
-                <a href="#" class="text-4xl hover:scale-125 transition transform duration-300">📷</a>
-                <a href="#" class="text-4xl hover:scale-125 transition transform duration-300">🐦</a>
-                <a href="#" class="text-4xl hover:scale-125 transition transform duration-300">🎵</a>
-            </div>
-            <p class="text-gray-600 font-light mt-8 max-w-2xl mx-auto">
-                Únete a nuestra comunidad de amantes del vino. Compartimos historias, recetas, eventos y mucho más.
+        <!-- CTA -->
+        <div class="mt-10">
+            <p class="text-sm text-gray-500">
+                Únete a nuestra comunidad 🍷
             </p>
         </div>
+
     </div>
 </section>
+
 {% endblock %}

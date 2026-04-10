@@ -132,10 +132,6 @@ if (themeToggle) {
     });
 }
 
-// Navbar mobile toggle - REMOVEIDO PARA EVITAR CONFLICTO
-// Este código está en main.js dentro del DOMContentLoaded
-// No modificar aquí para evitar conflictos
-
 // Iniciar autoplay cuando hay slides
 if (slides.length > 0) {
     showSlide(0);
