@@ -32,7 +32,7 @@ def dashboard():
     recent_orders = Order.get_all(limit=10)
     cart_count = CartService.get_cart_count()
 
-    return render_template('admin/dashboard.html',
+    return render_template('admin_dashboard.html',
                          stats=stats,
                          recent_orders=recent_orders,
                          cart_count=cart_count)
@@ -45,7 +45,7 @@ def wines():
     wines = Wine.get_all(limit=100)
     cart_count = CartService.get_cart_count()
 
-    return render_template('admin/wines.html',
+    return render_template('admin_wines.html',
                          wines=wines,
                          cart_count=cart_count)
 
@@ -56,7 +56,7 @@ def add_wine():
     """Add new wine"""
     if request.method == 'GET':
         cart_count = CartService.get_cart_count()
-        return render_template('admin/wine_form.html',
+        return render_template('admin_wine_form.html',
                              wine=None,
                              cart_count=cart_count)
 
@@ -118,7 +118,7 @@ def edit_wine(wine_id):
 
     if request.method == 'GET':
         cart_count = CartService.get_cart_count()
-        return render_template('admin/wine_form.html',
+        return render_template('admin_wine_form.html',
                              wine=wine,
                              cart_count=cart_count)
 
@@ -214,7 +214,7 @@ def orders():
     orders = Order.get_all(filters=filters, limit=100)
     cart_count = CartService.get_cart_count()
 
-    return render_template('admin/orders.html',
+    return render_template('admin_orders.html',
                          orders=orders,
                          current_status=status_filter,
                          cart_count=cart_count)
@@ -232,7 +232,7 @@ def order_detail(order_id):
 
     cart_count = CartService.get_cart_count()
 
-    return render_template('admin/order_detail.html',
+    return render_template('admin_order_detail.html',
                          order=order,
                          cart_count=cart_count)
 
