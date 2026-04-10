@@ -10,7 +10,7 @@
 <body class="bg-gray-50">
     <div class="flex h-screen overflow-hidden">
         <!-- SIDEBAR -->
-        <aside class="w-64 bg-red-900 text-white fixed h-screen overflow-y-auto shadow-lg z-50">
+        <aside id="sidebarMenu" class="w-64 bg-red-900 text-white fixed md:relative h-screen overflow-y-auto shadow-lg z-50 hidden md:block transition-all duration-300">
             <div class="p-6 border-b border-red-800">
                 <a href="{{ url_for('main.index') }}" class="flex items-center gap-3 text-xl font-bold hover:text-red-100 transition">
                     <i class='bx bxs-wine text-2xl'></i>
@@ -63,10 +63,13 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <div class="ml-64 w-full flex flex-col overflow-hidden">
+        <div class="w-full md:ml-0 flex flex-col overflow-hidden">
             <!-- NAVBAR -->
-            <nav class="bg-white border-b border-gray-200 shadow-sm px-8 py-4 flex items-center justify-between sticky top-0 z-40">
-
+            <nav class="bg-white border-b border-gray-200 shadow-sm px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-40">
+                <!-- Hamburger Menu (Mobile Only) -->
+                <button id="sidebarToggle" class="md:hidden text-gray-600 hover:text-gray-900 mr-4">
+                    <i class='bx bx-menu text-2xl'></i>
+                </button>
 
                 <!-- Search -->
                 <div class="flex-1 max-w-md mx-4">
@@ -126,5 +129,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Overlay Backdrop (Mobile) -->
+    <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden" onclick="document.getElementById('sidebarToggle').click()"></div>
+
+    <!-- Script para controlar el sidebar en mobile -->
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        sidebarToggle.addEventListener('click', function() {
+            sidebarMenu.classList.toggle('hidden');
+            sidebarOverlay.classList.toggle('hidden');
+        });
+
+        // Cerrar sidebar cuando se selecciona un enlace (solo en mobile)
+        const sidebarLinks = sidebarMenu.querySelectorAll('a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth < 768) {
+                    sidebarMenu.classList.add('hidden');
+                    sidebarOverlay.classList.add('hidden');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
