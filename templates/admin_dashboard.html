@@ -1,117 +1,156 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 
-{% block title %}Panel de Administración - Vinos del Valle{% endblock %}
+{% block title %}Dashboard - Panel de Administración{% endblock %}
 
-{% block content %}
-<div class="bg-gray-50 py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Panel de Administración</h1>
+{% block admin_content %}
+<!-- Header -->
+<div class="flex items-center justify-between mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+            <a href="{{ url_for('admin.dashboard') }}" class="hover:text-gray-900">Dashboard</a>
+            <i class='bx bx-chevron-right'></i>
+            <span class="text-red-900 font-medium">Inicio</span>
+        </div>
+    </div>
+    <a href="{{ url_for('admin.add_wine') }}" class="flex items-center gap-2 bg-red-900 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition">
+        <i class='bx bxs-wine'></i>
+        <span>Agregar Nuevo Vino</span>
+    </a>
+</div>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600">Total Vinos</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ stats.total_wines }}</p>
-                    </div>
-                    <div class="text-4xl">🍷</div>
-                </div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Pedidos Totales</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ stats.total_orders }}</h3>
             </div>
+            <i class='bx bxs-calendar-check text-4xl text-red-900 opacity-20'></i>
+        </div>
+    </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600">Total Pedidos</p>
-                        <p class="text-2xl font-bold text-gray-900">{{ stats.total_orders }}</p>
-                    </div>
-                    <div class="text-4xl">📦</div>
-                </div>
+    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-900">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Vinos en Catálogo</p>
+                <h3 class="text-3xl font-bold text-gray-900 mt-1">{{ stats.total_wines }}</h3>
             </div>
+            <i class='bx bxs-wine text-4xl text-red-900 opacity-20'></i>
+        </div>
+    </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600">Pedidos Pendientes</p>
-                        <p class="text-2xl font-bold text-yellow-600">{{ stats.pending_orders }}</p>
-                    </div>
-                    <div class="text-4xl">⏳</div>
-                </div>
+    <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-600">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-gray-600 text-sm font-medium">Ventas Totales</p>
+                <h3 class="text-3xl font-bold text-green-600 mt-1">S/ {{ "%.2f"|format(stats.total_revenue) }}</h3>
             </div>
+            <i class='bx bxs-dollar-circle text-4xl text-green-600 opacity-20'></i>
+        </div>
+    </div>
+</div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <p class="text-sm text-gray-600">Ventas Totales</p>
-                        <p class="text-2xl font-bold text-green-600">S/ {{ "%.2f"|format(stats.total_revenue) }}</p>
-                    </div>
-                    <div class="text-4xl">💰</div>
-                </div>
+<!-- Tables Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Recent Orders -->
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-bold text-gray-900">Pedidos Recientes</h3>
+            <div class="flex gap-2">
+                <button class="text-gray-600 hover:text-gray-900"><i class='bx bx-search'></i></button>
+                <button class="text-gray-600 hover:text-gray-900"><i class='bx bx-filter'></i></button>
             </div>
         </div>
-
-        <!-- Quick Actions -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <a href="{{ url_for('admin.wines') }}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Gestionar Vinos</h3>
-                <p class="text-gray-600">Ver, agregar y editar vinos del catálogo</p>
-            </a>
-
-            <a href="{{ url_for('admin.orders') }}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Gestionar Pedidos</h3>
-                <p class="text-gray-600">Ver y actualizar el estado de los pedidos</p>
-            </a>
-
-            <a href="{{ url_for('admin.add_wine') }}" class="bg-red-800 text-white rounded-lg shadow-md p-6 hover:bg-red-900 transition">
-                <h3 class="text-lg font-semibold mb-2">Agregar Nuevo Vino</h3>
-                <p class="text-red-100">Añadir un nuevo producto al catálogo</p>
-            </a>
+        
+        {% if recent_orders %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Cliente</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Fecha</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Total</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Estado</th>
+                        <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for order in recent_orders %}
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ order.customer_name }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-600">{{ order.created_at.strftime('%d/%m/%Y') }}</td>
+                        <td class="px-6 py-4 text-sm font-semibold text-gray-900">S/ {{ "%.2f"|format(order.total) }}</td>
+                        <td class="px-6 py-4 text-sm">
+                            {% if order.status == 'pending' %}
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800">Pendiente</span>
+                            {% elif order.status == 'confirmed' %}
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Confirmado</span>
+                            {% elif order.status == 'delivered' %}
+                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">Entregado</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-sm">
+                            <a href="{{ url_for('admin.order_detail', order_id=order.id) }}" class="text-red-900 hover:text-red-700 font-medium">Ver</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
-        <!-- Recent Orders -->
-        <div class="bg-white rounded-lg shadow-md p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Pedidos Recientes</h2>
-            {% if recent_orders %}
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead>
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Cliente</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        {% for order in recent_orders %}
-                        <tr>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">{{ order.id[:8] }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">{{ order.customer_name }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">S/ {{ "%.2f"|format(order.total) }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                {% if order.status == 'pending' %}
-                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">Pendiente</span>
-                                {% elif order.status == 'confirmed' %}
-                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">Confirmado</span>
-                                {% elif order.status == 'delivered' %}
-                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Entregado</span>
-                                {% endif %}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">{{ order.created_at.strftime('%d/%m/%Y') }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm">
-                                <a href="{{ url_for('admin.order_detail', order_id=order.id) }}" class="text-red-800 hover:text-red-900">Ver</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% else %}
-            <p class="text-gray-600">No hay pedidos recientes</p>
-            {% endif %}
+        {% else %}
+        <div class="px-6 py-8 text-center text-gray-500">
+            <i class='bx bxs-inbox text-4xl opacity-20 mb-2'></i>
+            <p>No hay pedidos recientes</p>
         </div>
+        {% endif %}
+    </div>
+
+    <!-- Tasks -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-bold text-gray-900">Tareas Rápidas</h3>
+            <button class="text-gray-600 hover:text-gray-900"><i class='bx bx-filter'></i></button>
+        </div>
+        
+        <ul class="divide-y divide-gray-200">
+            <li class="p-4 hover:bg-gray-50 transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300">
+                    <span class="text-sm text-gray-700 line-through">Verificar Inventario</span>
+                </div>
+                <button><i class='bx bx-dots-vertical-rounded text-gray-400'></i></button>
+            </li>
+            <li class="p-4 hover:bg-gray-50 transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300">
+                    <span class="text-sm text-gray-700 line-through">Procesar Nuevos Pedidos</span>
+                </div>
+                <button><i class='bx bx-dots-vertical-rounded text-gray-400'></i></button>
+            </li>
+            <li class="p-4 hover:bg-gray-50 transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" class="w-4 h-4 rounded border-gray-300">
+                    <span class="text-sm text-gray-900">Actualizar Catálogo</span>
+                </div>
+                <button><i class='bx bx-dots-vertical-rounded text-gray-400'></i></button>
+            </li>
+            <li class="p-4 hover:bg-gray-50 transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" checked class="w-4 h-4 rounded border-gray-300">
+                    <span class="text-sm text-gray-700 line-through">Revisar Comentarios</span>
+                </div>
+                <button><i class='bx bx-dots-vertical-rounded text-gray-400'></i></button>
+            </li>
+            <li class="p-4 hover:bg-gray-50 transition flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" class="w-4 h-4 rounded border-gray-300">
+                    <span class="text-sm text-gray-900">Análisis de Ventas</span>
+                </div>
+                <button><i class='bx bx-dots-vertical-rounded text-gray-400'></i></button>
+            </li>
+        </ul>
     </div>
 </div>
 {% endblock %}

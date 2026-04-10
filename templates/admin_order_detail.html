@@ -1,181 +1,177 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Detalle del Pedido - Admin{% endblock %}
 
-{% block content %}
-<div class="bg-gray-50 py-12">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-6">
-            <a href="{{ url_for('admin.orders') }}" class="text-red-800 hover:text-red-900 font-medium">
-                ← Volver a Pedidos
-            </a>
-        </div>
+{% block admin_content %}
+<div class="mb-6">
+    <a href="{{ url_for('admin.orders') }}" class="text-red-800 hover:text-red-900 font-medium">
+        ← Volver a Pedidos
+    </a>
+</div>
 
-        <div class="bg-white rounded-lg shadow-lg p-8">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Pedido #{{ order.order_id[:8] }}</h1>
-                    <p class="text-sm text-gray-500">{{ order.created_at.strftime('%d de %B de %Y a las %H:%M') }}</p>
-                </div>
-                <div>
-                    <form action="{{ url_for('admin.update_order_status', order_id=order.order_id) }}" method="POST">
-                        <select name="status" onchange="this.form.submit()"
-                                class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800 font-semibold">
-                            <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>📋 Pendiente</option>
-                            <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>✓ Confirmado</option>
-                            <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>⚙️ Procesando</option>
-                            <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>📦 Enviado</option>
-                            <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>✓ Entregado</option>
-                            <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>✗ Cancelado</option>
-                        </select>
-                    </form>
-                </div>
+<div class="bg-white rounded-lg shadow-lg p-8">
+<div class="flex justify-between items-start mb-6">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Pedido #{{ order.order_id[:8] }}</h1>
+        <p class="text-sm text-gray-500">{{ order.created_at.strftime('%d de %B de %Y a las %H:%M') }}</p>
+    </div>
+    <div>
+        <form action="{{ url_for('admin.update_order_status', order_id=order.order_id) }}" method="POST">
+            <select name="status" onchange="this.form.submit()"
+                    class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800 font-semibold">
+                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>📋 Pendiente</option>
+                <option value="confirmed" {% if order.status == 'confirmed' %}selected{% endif %}>✓ Confirmado</option>
+                <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>⚙️ Procesando</option>
+                <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>📦 Enviado</option>
+                <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>✓ Entregado</option>
+                <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>✗ Cancelado</option>
+            </select>
+        </form>
+    </div>
+</div>
+
+<!-- Customer Info -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 border-b pb-8">
+    <div>
+        <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+            Información del Cliente
+        </h2>
+        <div class="space-y-3">
+            <div>
+                <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Nombre</p>
+                <p class="text-gray-900 font-medium">{{ order.customer_name }}</p>
             </div>
-
-            <!-- Customer Info -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 border-b pb-8">
-                <div>
-                    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                        </svg>
-                        Información del Cliente
-                    </h2>
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Nombre</p>
-                            <p class="text-gray-900 font-medium">{{ order.customer_name }}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Email</p>
-                            <p class="text-gray-900 font-medium">{{ order.customer_email }}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Teléfono</p>
-                            <p class="text-gray-900 font-medium">{{ order.customer_phone if order.customer_phone else 'No especificado' }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                        <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a7 7 0 0114 0A7 7 0 013 10zm0 0a3 3 0 006 0m-6 0a3 3 0 016 0m-6 0h6M3 20h18a2 2 0 002-2V9a2 2 0 00-2-2H3"></path>
-                        </svg>
-                        Información de Pago
-                    </h2>
-                    <div class="space-y-3">
-                        <div>
-                            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Método de Pago</p>
-                            <p class="text-gray-900 font-medium">
-                                {% if order.payment_method == 'credit_card' %}
-                                    💳 Tarjeta de Crédito
-                                {% elif order.payment_method == 'debit_card' %}
-                                    💳 Tarjeta de Débito
-                                {% elif order.payment_method == 'bank_transfer' %}
-                                    🏦 Transferencia Bancaria
-                                {% elif order.payment_method == 'cash' %}
-                                    💵 Efectivo (Contra Entrega)
-                                {% else %}
-                                    No especificado
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Envío</p>
-                            <p class="text-gray-900 font-medium">
-                                {% if order.is_international %}
-                                    🌍 Envío Internacional
-                                {% else %}
-                                    📍 Envío Local
-                                {% endif %}
-                            </p>
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Email</p>
+                <p class="text-gray-900 font-medium">{{ order.customer_email }}</p>
             </div>
-
-            <!-- Shipping Info -->
-            <div class="mb-8 border-b pb-8">
-                <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                    </svg>
-                    Dirección de Envío
-                </h2>
-                <div class="bg-gray-50 rounded-lg p-4 space-y-2">
-                    <p class="text-gray-900 font-medium">{{ order.shipping_address }}</p>
-                    <p class="text-gray-700">{{ order.shipping_city }}, {{ order.shipping_country }}</p>
-                </div>
-                {% if order.notes %}
-                <div class="mt-4">
-                    <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-2">Notas Especiales:</p>
-                    <p class="text-gray-700 italic">{{ order.notes }}</p>
-                </div>
-                {% endif %}
-            </div>
-
-            <!-- Order Items -->
-            <div class="mb-8 border-b pb-8">
-                <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                    </svg>
-                    Productos
-                </h2>
-                <div class="overflow-hidden border border-gray-200 rounded-lg">
-                    <table class="w-full">
-                        <thead class="bg-gray-100 border-b border-gray-200">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Producto</th>
-                                <th class="px-6 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Cantidad</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Precio Unitario</th>
-                                <th class="px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-200">
-                            {% if order.order_items and order.order_items|length > 0 %}
-                                {% for item in order.order_items %}
-                                <tr class="hover:bg-gray-50 transition-colors">
-                                    <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ item.wine_name }}</td>
-                                    <td class="px-6 py-4 text-sm text-center text-gray-700">
-                                        <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">{{ item.quantity }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm text-right text-gray-700">S/ {{ "%.2f"|format(item.wine_price) }}</td>
-                                    <td class="px-6 py-4 text-sm text-right font-semibold text-gray-900">S/ {{ "%.2f"|format(item.subtotal) }}</td>
-                                </tr>
-                                {% endfor %}
-                            {% else %}
-                            <tr>
-                                <td colspan="4" class="px-6 py-8 text-center text-gray-500">
-                                    <p class="text-sm">No hay productos en este pedido</p>
-                                </td>
-                            </tr>
-                            {% endif %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Order Total -->
-            <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Resumen del Pedido</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-700 font-medium">Subtotal de Productos</span>
-                        <span class="text-gray-900 font-semibold">S/ {{ "%.2f"|format(order.subtotal) }}</span>
-                    </div>
-                    <div class="flex justify-between items-center pb-3 border-b-2 border-gray-300">
-                        <span class="text-gray-700 font-medium">Costo de Envío</span>
-                        <span class="text-gray-900 font-semibold">S/ {{ "%.2f"|format(order.shipping_cost) }}</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-lg font-bold text-gray-900">Total</span>
-                        <span class="text-2xl font-bold text-red-800">S/ {{ "%.2f"|format(order.total) }}</span>
-                    </div>
-                </div>
+            <div>
+                <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Teléfono</p>
+                <p class="text-gray-900 font-medium">{{ order.customer_phone if order.customer_phone else 'No especificado' }}</p>
             </div>
         </div>
     </div>
+    <div>
+        <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10a7 7 0 0114 0A7 7 0 013 10zm0 0a3 3 0 006 0m-6 0a3 3 0 016 0m-6 0h6M3 20h18a2 2 0 002-2V9a2 2 0 00-2-2H3"></path>
+            </svg>
+            Información de Pago
+        </h2>
+        <div class="space-y-3">
+            <div>
+                <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Método de Pago</p>
+                <p class="text-gray-900 font-medium">
+                    {% if order.payment_method == 'credit_card' %}
+                        💳 Tarjeta de Crédito
+                    {% elif order.payment_method == 'debit_card' %}
+                        💳 Tarjeta de Débito
+                    {% elif order.payment_method == 'bank_transfer' %}
+                        🏦 Transferencia Bancaria
+                    {% elif order.payment_method == 'cash' %}
+                        💵 Efectivo (Contra Entrega)
+                    {% else %}
+                        No especificado
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold">Envío</p>
+                <p class="text-gray-900 font-medium">
+                    {% if order.is_international %}
+                        🌍 Envío Internacional
+                    {% else %}
+                        📍 Envío Local
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Shipping Info -->
+<div class="mb-8 border-b pb-8">
+    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+        Dirección de Envío
+    </h2>
+    <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+        <p class="text-gray-900 font-medium">{{ order.shipping_address }}</p>
+        <p class="text-gray-700">{{ order.shipping_city }}, {{ order.shipping_country }}</p>
+    </div>
+    {% if order.notes %}
+    <div class="mt-4">
+        <p class="text-xs uppercase tracking-wide text-gray-500 font-semibold mb-2">Notas Especiales:</p>
+        <p class="text-gray-700 italic">{{ order.notes }}</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Order Items -->
+<div class="mb-8 border-b pb-8">
+    <h2 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
+        <svg class="w-5 h-5 mr-2 text-red-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+        </svg>
+        Productos
+    </h2>
+    <div class="overflow-hidden border border-gray-200 rounded-lg">
+        <table class="w-full">
+            <thead class="bg-gray-100 border-b border-gray-200">
+                <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">Producto</th>
+                    <th class="px-6 py-3 text-center text-xs font-bold text-gray-700 uppercase tracking-wider">Cantidad</th>
+                    <th class="px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Precio Unitario</th>
+                    <th class="px-6 py-3 text-right text-xs font-bold text-gray-700 uppercase tracking-wider">Subtotal</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% if order.order_items and order.order_items|length > 0 %}
+                    {% for item in order.order_items %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ item.wine_name }}</td>
+                        <td class="px-6 py-4 text-sm text-center text-gray-700">
+                            <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold">{{ item.quantity }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-right text-gray-700">S/ {{ "%.2f"|format(item.wine_price) }}</td>
+                        <td class="px-6 py-4 text-sm text-right font-semibold text-gray-900">S/ {{ "%.2f"|format(item.subtotal) }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-gray-500">
+                        <p class="text-sm">No hay productos en este pedido</p>
+                    </td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Order Total -->
+<div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border border-gray-200">
+    <h3 class="text-lg font-bold text-gray-900 mb-4">Resumen del Pedido</h3>
+    <div class="space-y-3">
+        <div class="flex justify-between items-center">
+            <span class="text-gray-700 font-medium">Subtotal de Productos</span>
+            <span class="text-gray-900 font-semibold">S/ {{ "%.2f"|format(order.subtotal) }}</span>
+        </div>
+        <div class="flex justify-between items-center pb-3 border-b-2 border-gray-300">
+            <span class="text-gray-700 font-medium">Costo de Envío</span>
+            <span class="text-gray-900 font-semibold">S/ {{ "%.2f"|format(order.shipping_cost) }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+            <span class="text-lg font-bold text-gray-900">Total</span>
+            <span class="text-2xl font-bold text-red-800">S/ {{ "%.2f"|format(order.total) }}</span>
+        </div>
+    </div>
+</div>
 </div>
 {% endblock %}

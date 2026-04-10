@@ -1,11 +1,18 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 
 {% block title %}Gestionar Pedidos - Admin{% endblock %}
 
-{% block content %}
-<div class="bg-gray-50 py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Gestionar Pedidos</h1>
+{% block admin_content %}
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Gestionar Pedidos</h1>
+                <div class="flex items-center gap-2 text-sm text-gray-600 mt-2">
+                    <a href="{{ url_for('admin.dashboard') }}" class="hover:text-gray-900">Dashboard</a>
+                    <i class='bx bx-chevron-right'></i>
+                    <span class="text-red-900 font-medium">Pedidos</span>
+                </div>
+            </div>
+        </div>
 
         <!-- Filter -->
         <div class="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -74,6 +81,4 @@
                 </table>
             </div>
         </div>
-    </div>
-</div>
 {% endblock %}
