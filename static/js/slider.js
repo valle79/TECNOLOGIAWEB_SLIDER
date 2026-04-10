@@ -132,15 +132,9 @@ if (themeToggle) {
     });
 }
 
-// Navbar mobile toggle
-const menuBtn = document.getElementById("mobile-menu-button");
-const mobileMenu = document.getElementById("mobile-menu");
-
-if (menuBtn && mobileMenu) {
-    menuBtn.addEventListener("click", () => {
-        mobileMenu.classList.toggle("hidden");
-    });
-}
+// Navbar mobile toggle - REMOVEIDO PARA EVITAR CONFLICTO
+// Este código está en main.js dentro del DOMContentLoaded
+// No modificar aquí para evitar conflictos
 
 // Iniciar autoplay cuando hay slides
 if (slides.length > 0) {
