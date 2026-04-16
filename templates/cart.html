@@ -4,7 +4,10 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8">🛒 Carrito de Compras</h1>
+    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 flex items-center gap-2">
+        🛒 Carrito de Compras 
+        <span class="text-sm bg-red-100 text-red-800 px-2 py-1 rounded-full">{{ cart_items|length }}</span>
+    </h1>
     
     {% if cart_items %}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
