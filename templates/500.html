@@ -6,10 +6,29 @@
 <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full text-center">
         <h1 class="text-9xl font-bold text-red-800">500</h1>
-        <h2 class="mt-4 text-3xl font-bold text-gray-900">Error del Servidor</h2>
-        <p class="mt-2 text-gray-600">Lo sentimos, algo salió mal. Estamos trabajando para solucionarlo.</p>
+        <p class="text-4xl">⚠️</p>
+        <h2 class="mt-2 text-3xl font-bold text-gray-900">Error del Servidor</h2>
+        <p class="mt-2 text-gray-600">Lo sentimos, ocurrió un error inesperado. Estamos trabajando para solucionarlo.</p>
         <div class="mt-6">
-            <a href="{{ url_for('main.index') }}" class="inline-block bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900">
+            <a href="{{ url_for('main.index') }}" class="inline-block bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900 transition">
+                Volver al Inicio
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}{% extends "base.html" %}
+
+{% block title %}Error del Servidor - Vinos del Valle{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full text-center">
+        <h1 class="text-9xl font-bold text-red-800">500</h1>
+        <p class="text-4xl">⚠️</p>
+        <h2 class="mt-2 text-3xl font-bold text-gray-900">Error del Servidor</h2>
+        <p class="mt-2 text-gray-600">Lo sentimos, ocurrió un error inesperado. Estamos trabajando para solucionarlo.</p>
+        <div class="mt-6">
+            <a href="{{ url_for('main.index') }}" class="inline-block bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900 transition">
                 Volver al Inicio
             </a>
         </div>
