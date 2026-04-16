@@ -164,10 +164,10 @@
             <path fill="currentColor" d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"></path>
         </svg>
 
-        <div class="px-4 pt-12 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
-            <div class="grid gap-16 row-gap-10 mb-8 lg:grid-cols-6">
+        <div class="px-4 pt-8 sm:pt-12 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
+            <div class="grid gap-8 sm:gap-12 md:gap-16 row-gap-10 mb-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
                 <!-- Company Info -->
-                <div class="md:max-w-md lg:col-span-2">
+                <div class="md:max-w-md lg:col-span-2 sm:text-center lg:text-left">
                     <a href="{{ url_for('main.index') }}" aria-label="Ir a inicio" title="Vinos del Valle" class="inline-flex items-center">
                         <img src="{{ url_for('static', filename='images/sanroque.png') }}" 
                              alt="Vinos del Valle Logo" 
@@ -204,7 +204,7 @@
                 </div>
 
                 <!-- Categories -->
-                <div>
+                <div class="text-center sm:text-left">
                     <p class="font-semibold tracking-wide text-white uppercase text-sm">
                         Categorías
                     </p>
@@ -225,7 +225,7 @@
                 </div>
 
                 <!-- About & Info -->
-                <div>
+                <div class="text-center sm:text-left">
                     <p class="font-semibold tracking-wide text-white uppercase text-sm">
                         Información
                     </p>
@@ -246,7 +246,7 @@
                 </div>
 
                 <!-- Account & Shopping -->
-                <div>
+                <div class="text-center sm:text-left">
                     <p class="font-semibold tracking-wide text-white uppercase text-sm">
                         Mi Cuenta
                     </p>
@@ -268,11 +268,11 @@
             </div>
 
             <!-- Bottom Bar -->
-            <div class="flex flex-col justify-between pt-5 pb-10 border-t border-red-700 sm:flex-row">
-                <p class="text-sm text-red-100">
+            <div class="flex flex-col justify-center items-center pt-5 pb-10 border-t border-red-700 sm:flex-row sm:justify-between gap-4">
+                <p class="text-sm text-red-100 text-center sm:text-left">
                     © Copyright 2024 Vitivinícola San Roque. Todos los derechos reservados.
                 </p>
-                <div class="flex items-center mt-4 space-x-4 sm:mt-0">
+                <div class="flex items-center justify-center space-x-4">
                     <a href="#" class="transition-colors duration-300 text-red-100 hover:text-white text-xs">Términos</a>
                     <span class="text-red-200">•</span>
                     <a href="#" class="transition-colors duration-300 text-red-100 hover:text-white text-xs">Privacidad</a>
