@@ -45,9 +45,14 @@ def create_app(config_name='development'):
     # Initialize Cloudinary for image storage
     try:
         CloudinaryConfig.initialize()
-        logger.info("Cloudinary initialized successfully")
+        logger.info("✅ Cloudinary initialized successfully")
+    except ValueError as e:
+        logger.error(f"❌ Cloudinary configuration error: {e}")
+        logger.error("Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your environment variables")
+        raise
     except Exception as e:
-        logger.warning(f"Cloudinary initialization warning: {e}")
+        logger.error(f"❌ Cloudinary initialization error: {e}")
+        raise
         logger.warning("Image uploads will not work without Cloudinary credentials")
     
     # Register blueprints

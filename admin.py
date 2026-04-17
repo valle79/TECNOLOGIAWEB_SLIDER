@@ -68,18 +68,24 @@ def add_wine():
         file = request.files['image_file']
         if file and file.filename != '':
             # Upload to Cloudinary
-            upload_result = cloudinary_service.upload_wine_image(
-                file, 
-                wine_name=wine_name,
-                auto_optimize=True
-            )
-            
-            if upload_result:
-                # Store secure_url (encrypted/safe for HTTPS)
-                image_url = upload_result['secure_url']
-                logger.info(f"Image uploaded to Cloudinary: {upload_result['public_id']}")
-            else:
-                flash('Error al subir la imagen. Usando URL proporcionada.', 'warning')
+            try:
+                upload_result = cloudinary_service.upload_wine_image(
+                    file, 
+                    wine_name=wine_name,
+                    auto_optimize=True
+                )
+                
+                if upload_result:
+                    # Store secure_url (encrypted/safe for HTTPS)
+                    image_url = upload_result['secure_url']
+                    logger.info(f"✅ Image uploaded to Cloudinary: {upload_result['public_id']}")
+                else:
+                    flash('❌ Error al subir la imagen a Cloudinary. Asegúrate de haber configurado las credenciales en Render.', 'error')
+                    logger.warning("Image upload to Cloudinary failed - result is None")
+            except Exception as e:
+                error_msg = str(e)
+                logger.error(f"❌ Image upload exception: {error_msg}")
+                flash(f'❌ Error al subir la imagen: {error_msg}', 'error')
 
     wine_data = {
         'name': request.form.get('name'),
@@ -131,24 +137,32 @@ def edit_wine(wine_id):
         file = request.files['image_file']
         if file and file.filename != '':
             # Upload new image to Cloudinary
-            upload_result = cloudinary_service.upload_wine_image(
-                file,
-                wine_name=wine_name,
-                auto_optimize=True
-            )
-            
-            if upload_result:
-                # Store secure_url
-                image_url = upload_result['secure_url']
+            try:
+                upload_result = cloudinary_service.upload_wine_image(
+                    file,
+                    wine_name=wine_name,
+                    auto_optimize=True
+                )
                 
-                # Delete old image from Cloudinary if it exists
-                if old_image_url:
-                    public_id = cloudinary_service.extract_public_id_from_url(old_image_url)
-                    if public_id:
-                        cloudinary_service.delete_wine_image(public_id)
-                        logger.info(f"Deleted old image: {public_id}")
-            else:
-                flash('Error al subir la imagen. Manteniendo imagen anterior.', 'warning')
+                if upload_result:
+                    # Store secure_url
+                    image_url = upload_result['secure_url']
+                    logger.info(f"✅ Image updated in Cloudinary: {upload_result['public_id']}")
+                    
+                    # Delete old image from Cloudinary if it exists
+                    if old_image_url:
+                        public_id = cloudinary_service.extract_public_id_from_url(old_image_url)
+                        if public_id:
+                            cloudinary_service.delete_wine_image(public_id)
+                            logger.info(f"✅ Deleted old image: {public_id}")
+                else:
+                    flash('❌ Error al subir la imagen a Cloudinary. Asegúrate de haber configurado las credenciales en Render.', 'error')
+                    logger.warning("Image upload to Cloudinary failed - result is None")
+                    image_url = old_image_url
+            except Exception as e:
+                error_msg = str(e)
+                logger.error(f"❌ Image upload exception: {error_msg}")
+                flash(f'❌ Error al subir la imagen: {error_msg}', 'error')
                 image_url = old_image_url
     elif not image_url:
         # If no new file and no URL provided, keep the old image
