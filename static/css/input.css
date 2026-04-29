@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* ============================================
+   ANIMACIONES PERSONALIZADAS CON TAILWIND v4
+   ============================================ */
+
+@layer components {
+  /* Animación para el badge - Glow efecto */
+  .badge-glow {
+    @apply animate-pulse;
+  }
+  
+  /* Animación para títulos - Slide in desde abajo */
+  .heading-slide-in {
+    animation: slideInUp 0.8s ease-out;
+  }
+  
+  /* Animación para botones - Pulse en el texto */
+  .btn-pulse-text {
+    @apply hover:animate-pulse transition-all duration-300;
+  }
+}
+
+@layer utilities {
+  /* Animación personalizada: Deslizamiento vertical */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Animación personalizada: Brillo suave */
+  @keyframes softGlow {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(159, 18, 57, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 20px rgba(159, 18, 57, 0.6);
+    }
+  }
+  
+  /* Animación personalizada: Rotación suave */
+  @keyframes rotateSmooth {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Clases de utilidad personalizadas */
+  .animate-soft-glow {
+    animation: softGlow 2s ease-in-out infinite;
+  }
+  
+  .animate-rotate-smooth {
+    animation: rotateSmooth 20s linear infinite;
+  }
+  
+  .animate-slide-in-up {
+    animation: slideInUp 0.8s ease-out;
+  }
+}
+

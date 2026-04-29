@@ -24,19 +24,19 @@
     <!-- Content Container - Left Side -->
     <div class="relative flex flex-col items-start w-full max-w-xl px-4 mx-auto md:px-0 lg:px-8 lg:max-w-screen-xl lg:pr-0">
         <div class="mb-16 lg:my-40 lg:max-w-lg lg:pr-5">
-            <!-- Badge -->
-            <div class="inline-block px-4 py-2 mb-6 text-xs font-semibold tracking-widest text-red-800 uppercase rounded-full bg-red-100">
+            <!-- Badge - Animación: Bounce -->
+            <div class="inline-block px-4 py-2 mb-6 text-xs font-semibold tracking-widest text-red-800 uppercase rounded-full bg-red-100 animate-bounce">
                 ✨ Vinos Premium
             </div>
             
-            <!-- Main Heading -->
-            <h1 class="mb-6 font-sans text-3xl font-black tracking-tight text-gray-900 sm:text-4xl lg:text-5xl leading-tight">
+            <!-- Main Heading - Animación: Slide In Up -->
+            <h1 class="mb-6 font-sans text-3xl font-black tracking-tight text-gray-900 sm:text-4xl lg:text-5xl leading-tight animate-slide-in-up">
                 Descubre lo Mejor<br class="hidden md:block" />
                 <span class="text-red-800">de las Viñas Peruanas</span>
             </h1>
             
-            <!-- Description -->
-            <p class="pr-5 mb-8 text-base text-gray-700 md:text-lg leading-relaxed font-light">
+            <!-- Description - Animación: Pulse -->
+            <p class="pr-5 mb-8 text-base text-gray-700 md:text-lg leading-relaxed font-light animate-pulse">
                 Selección meticulosa de vinos premium producidos en las mejores regiones vinícolas del Perú. Envíos seguros a todo el país y exportación internacional.
             </p>
             
@@ -44,17 +44,17 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <a
                     href="{{ url_for('wine.catalog') }}"
-                    class="inline-flex items-center justify-center h-12 px-8 font-bold text-white transition duration-200 rounded-lg shadow-lg bg-red-800 hover:bg-red-900 focus:shadow-outline focus:outline-none transform hover:scale-105"
+                    class="inline-flex items-center justify-center h-12 px-8 font-bold text-white transition duration-200 rounded-lg shadow-lg bg-red-800 hover:bg-red-900 focus:shadow-outline focus:outline-none transform hover:scale-105 animate-soft-glow"
                 >
                     Explorar Catálogo
                 </a>
                 <a
                     href="{{ url_for('main.about') }}"
                     aria-label="Conocer más sobre nosotros"
-                    class="inline-flex items-center font-semibold text-gray-800 transition-colors duration-200 hover:text-red-800 group"
+                    class="inline-flex items-center font-semibold text-gray-800 transition-colors duration-200 hover:text-red-800 group hover:animate-pulse"
                 >
                     <span>Conocer Más</span>
-                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300 group-hover:animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
                     </svg>
                 </a>
@@ -67,13 +67,13 @@
 <section class="md:hidden relative bg-white">
     <!-- Header Content -->
     <div class="px-4 pt-8 pb-4">
-        <!-- Badge -->
-        <div class="inline-block px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-red-800 uppercase rounded-full bg-red-100">
+        <!-- Badge - Animación: Bounce -->
+        <div class="inline-block px-4 py-2 mb-4 text-xs font-semibold tracking-widest text-red-800 uppercase rounded-full bg-red-100 animate-bounce">
             ✨ Vinos Premium
         </div>
         
-        <!-- Main Heading -->
-        <h1 class="font-sans text-2xl font-black tracking-tight text-gray-900 leading-tight">
+        <!-- Main Heading - Animación: Slide In Up -->
+        <h1 class="font-sans text-2xl font-black tracking-tight text-gray-900 leading-tight animate-slide-in-up">
             Descubre lo Mejor<br class="block" />
             <span class="text-red-800">de las Viñas Peruanas</span>
         </h1>

@@ -1,0 +1,19 @@
+{
+  "name": "tecnologiaweb_slider",
+  "version": "1.0.0",
+  "description": "Sistema de e-commerce profesional para venta de vinos premium en Perú con capacidad de exportación internacional. Construido con Flask, PostgreSQL (Neon), y tecnologías web modernas.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css",
+    "dev": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.12",
+    "tailwindcss": "^4.2.4"
+  }
+}
