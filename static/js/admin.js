@@ -1,140 +1,63 @@
 /**
  * Admin Panel JavaScript - Professional Edition
- * Funcionalidad avanzada para el panel de administración con SweetAlert2
+ * Funcionalidad avanzada para el panel de administración
  */
 
 // ========================================
-// CONFIGURACIÓN DE SWEETALERT2
-// ========================================
-const SwalConfig = {
-    customClass: {
-        popup: 'rounded-xl shadow-2xl',
-        title: 'text-2xl font-bold',
-        confirmButton: 'bg-red-900 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl',
-        cancelButton: 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-lg transition-all duration-200 ml-2',
-        denyButton: 'bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 ml-2'
-    },
-    buttonsStyling: false,
-    showClass: {
-        popup: 'animate__animated animate__fadeInDown animate__faster'
-    },
-    hideClass: {
-        popup: 'animate__animated animate__fadeOutUp animate__faster'
-    }
-};
-
-// ========================================
-// UTILIDADES DE ALERTAS
+// UTILIDADES DE ALERTAS (Sin dependencias externas)
 // ========================================
 const AdminAlerts = {
     // Alerta de éxito
     success: (title, text = '') => {
-        return Swal.fire({
-            ...SwalConfig,
-            icon: 'success',
-            title: title,
-            text: text,
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false
-        });
+        alert(`✅ ${title}\n${text}`);
     },
 
     // Alerta de error
     error: (title, text = '') => {
-        return Swal.fire({
-            ...SwalConfig,
-            icon: 'error',
-            title: title,
-            text: text,
-            confirmButtonText: 'Entendido'
-        });
+        alert(`❌ ${title}\n${text}`);
     },
 
     // Alerta de advertencia
     warning: (title, text = '') => {
-        return Swal.fire({
-            ...SwalConfig,
-            icon: 'warning',
-            title: title,
-            text: text,
-            confirmButtonText: 'Entendido'
-        });
+        alert(`⚠️ ${title}\n${text}`);
     },
 
     // Alerta de información
     info: (title, text = '') => {
-        return Swal.fire({
-            ...SwalConfig,
-            icon: 'info',
-            title: title,
-            text: text,
-            confirmButtonText: 'Entendido'
-        });
+        alert(`ℹ️ ${title}\n${text}`);
     },
 
     // Confirmación de eliminación
     confirmDelete: (itemName = 'este elemento') => {
-        return Swal.fire({
-            ...SwalConfig,
-            title: '¿Estás seguro?',
-            html: `Estás a punto de eliminar <strong>${itemName}</strong>.<br>Esta acción no se puede deshacer.`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar',
-            reverseButtons: true,
-            focusCancel: true
-        });
+        return confirm(`¿Estás seguro?\n\nEstás a punto de eliminar "${itemName}".\nEsta acción no se puede deshacer.`);
     },
 
     // Confirmación genérica
-    confirm: (title, text, confirmText = 'Confirmar', cancelText = 'Cancelar') => {
-        return Swal.fire({
-            ...SwalConfig,
-            title: title,
-            text: text,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
-            reverseButtons: true
-        });
-    },
-
-    // Alerta de carga
-    loading: (title = 'Procesando...', text = 'Por favor espera') => {
-        return Swal.fire({
-            ...SwalConfig,
-            title: title,
-            text: text,
-            allowOutsideClick: false,
-            allowEscapeKey: false,
-            showConfirmButton: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
+    confirm: (title, text) => {
+        return confirm(`${title}\n\n${text}`);
     },
 
     // Toast notification (pequeña notificación)
-    toast: (message, icon = 'success') => {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        return Toast.fire({
-            icon: icon,
-            title: message
-        });
+    toast: (message, type = 'success') => {
+        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
+        
+        // Crear elemento de toast
+        const toast = document.createElement('div');
+        toast.className = 'fixed top-4 right-4 z-50 bg-white shadow-lg rounded-lg p-4 flex items-center space-x-3 animate-fade-in';
+        toast.style.minWidth = '300px';
+        toast.innerHTML = `
+            <span class="text-2xl">${icon}</span>
+            <span class="flex-1 text-gray-800">${message}</span>
+            <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600">✕</button>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Auto-remover después de 3 segundos
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 };
 
@@ -190,26 +113,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ========================================
-    // CONFIRMACIÓN DE ELIMINACIÓN CON SWEETALERT2
+    // CONFIRMACIÓN DE ELIMINACIÓN MEJORADA
     // ========================================
     const deleteButtons = document.querySelectorAll('[data-confirm-delete]');
     deleteButtons.forEach(button => {
         button.addEventListener('click', function(e) {
-            e.preventDefault();
             const itemName = this.getAttribute('data-confirm-delete') || 'este elemento';
-            const form = this.closest('form');
             
-            AdminAlerts.confirmDelete(itemName).then((result) => {
-                if (result.isConfirmed) {
-                    // Mostrar loading
-                    AdminAlerts.loading('Eliminando...', 'Por favor espera un momento');
-                    
-                    // Enviar el formulario
-                    if (form) {
-                        form.submit();
-                    }
-                }
-            });
+            if (!AdminAlerts.confirmDelete(itemName)) {
+                e.preventDefault();
+            }
         });
     });
 
@@ -219,15 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const confirmForms = document.querySelectorAll('[data-confirm-submit]');
     confirmForms.forEach(form => {
         form.addEventListener('submit', function(e) {
-            e.preventDefault();
             const message = this.getAttribute('data-confirm-submit') || '¿Deseas continuar con esta acción?';
             
-            AdminAlerts.confirm('Confirmar acción', message, 'Sí, continuar', 'Cancelar').then((result) => {
-                if (result.isConfirmed) {
-                    AdminAlerts.loading('Procesando...', 'Por favor espera');
-                    this.submit();
-                }
-            });
+            if (!AdminAlerts.confirm('Confirmar acción', message)) {
+                e.preventDefault();
+            }
         });
     });
 
@@ -244,10 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
             requiredFields.forEach(field => {
                 if (!field.value.trim()) {
                     isValid = false;
-                    field.classList.add('border-red-500');
+                    field.classList.add('border-red-500', 'border-2');
                     if (!firstInvalidField) firstInvalidField = field;
                 } else {
-                    field.classList.remove('border-red-500');
+                    field.classList.remove('border-red-500', 'border-2');
                 }
             });
 
@@ -270,15 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const type = message.getAttribute('data-flash-type') || 'info';
         const text = message.getAttribute('data-flash-message');
         
-        if (type === 'success') {
-            AdminAlerts.toast(text, 'success');
-        } else if (type === 'error') {
-            AdminAlerts.toast(text, 'error');
-        } else if (type === 'warning') {
-            AdminAlerts.toast(text, 'warning');
-        } else {
-            AdminAlerts.toast(text, 'info');
-        }
+        AdminAlerts.toast(text, type);
         
         // Remover el elemento del DOM
         message.remove();
@@ -294,19 +195,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const newStatus = this.getAttribute('data-change-status');
             const itemName = this.getAttribute('data-item-name') || 'este elemento';
             
-            AdminAlerts.confirm(
-                'Cambiar estado',
-                `¿Deseas cambiar el estado de ${itemName} a "${newStatus}"?`,
-                'Sí, cambiar',
-                'Cancelar'
-            ).then((result) => {
-                if (result.isConfirmed) {
-                    AdminAlerts.loading('Actualizando estado...', 'Por favor espera');
-                    // Aquí iría la lógica para cambiar el estado
-                    const form = this.closest('form');
-                    if (form) form.submit();
-                }
-            });
+            if (AdminAlerts.confirm('Cambiar estado', `¿Deseas cambiar el estado de ${itemName} a "${newStatus}"?`)) {
+                const form = this.closest('form');
+                if (form) form.submit();
+            }
         });
     });
 
@@ -332,12 +224,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
 
-                // Mostrar preview
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    AdminAlerts.toast('Imagen cargada correctamente', 'success');
-                };
-                reader.readAsDataURL(file);
+                // Mostrar preview si existe un elemento con id 'image-preview'
+                const preview = document.getElementById('image-preview');
+                if (preview) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.classList.remove('hidden');
+                        AdminAlerts.toast('Imagen cargada correctamente', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    AdminAlerts.toast('Imagen seleccionada correctamente', 'success');
+                }
             }
         });
     });
@@ -353,9 +252,87 @@ document.addEventListener('DOMContentLoaded', function() {
         inputs.forEach(input => {
             input.addEventListener('input', function() {
                 clearTimeout(saveTimeout);
+                
+                // Mostrar indicador de "guardando..."
+                const indicator = document.getElementById('save-indicator');
+                if (indicator) {
+                    indicator.textContent = '💾 Guardando...';
+                    indicator.classList.remove('hidden');
+                }
+                
                 saveTimeout = setTimeout(() => {
+                    if (indicator) {
+                        indicator.textContent = '✅ Guardado';
+                        setTimeout(() => indicator.classList.add('hidden'), 2000);
+                    }
                     AdminAlerts.toast('Cambios guardados automáticamente', 'success');
                 }, 2000);
+            });
+        });
+    });
+
+    // ========================================
+    // AUTO-CERRAR ALERTAS
+    // ========================================
+    const alerts = document.querySelectorAll('.alert-auto-close');
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            alert.style.opacity = '0';
+            alert.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => alert.remove(), 300);
+        }, 5000);
+    });
+
+    // ========================================
+    // CONTADOR DE CARACTERES EN TEXTAREAS
+    // ========================================
+    const textareasWithCounter = document.querySelectorAll('textarea[data-max-length]');
+    textareasWithCounter.forEach(textarea => {
+        const maxLength = parseInt(textarea.getAttribute('data-max-length'));
+        const counterId = textarea.getAttribute('data-counter-id');
+        const counter = counterId ? document.getElementById(counterId) : null;
+        
+        if (counter) {
+            const updateCounter = () => {
+                const remaining = maxLength - textarea.value.length;
+                counter.textContent = `${remaining} caracteres restantes`;
+                
+                if (remaining < 0) {
+                    counter.classList.add('text-red-600');
+                    counter.classList.remove('text-gray-600');
+                } else if (remaining < 50) {
+                    counter.classList.add('text-yellow-600');
+                    counter.classList.remove('text-gray-600', 'text-red-600');
+                } else {
+                    counter.classList.add('text-gray-600');
+                    counter.classList.remove('text-yellow-600', 'text-red-600');
+                }
+            };
+            
+            textarea.addEventListener('input', updateCounter);
+            updateCounter(); // Inicializar
+        }
+    });
+
+    // ========================================
+    // COPIAR AL PORTAPAPELES
+    // ========================================
+    const copyButtons = document.querySelectorAll('[data-copy-text]');
+    copyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const textToCopy = this.getAttribute('data-copy-text');
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                AdminAlerts.toast('Copiado al portapapeles', 'success');
+                
+                // Cambiar texto del botón temporalmente
+                const originalText = this.textContent;
+                this.textContent = '✓ Copiado';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                }, 2000);
+            }).catch(() => {
+                AdminAlerts.error('Error', 'No se pudo copiar al portapapeles');
             });
         });
     });
