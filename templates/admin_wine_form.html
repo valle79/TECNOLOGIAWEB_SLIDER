@@ -20,7 +20,10 @@
 
         <div class="bg-white rounded-lg shadow-md p-8 max-w-3xl">
             <form action="{% if wine %}{{ url_for('admin.edit_wine', wine_id=wine.id) }}{% else %}{{ url_for('admin.add_wine') }}{% endif %}" 
-                  method="POST" enctype="multipart/form-data">
+                  method="POST" 
+                  enctype="multipart/form-data"
+                  data-validate="true"
+                  onsubmit="AdminAlerts.loading('{% if wine %}Actualizando{% else %}Guardando{% endif %} vino...', 'Por favor espera un momento');">
                 
                 <div class="space-y-6">
                     <div>

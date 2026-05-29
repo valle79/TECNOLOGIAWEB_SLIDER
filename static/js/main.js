@@ -1,10 +1,98 @@
 // Main JavaScript for Wine E-commerce
 
+// ========================================
+// CONFIGURACIÓN DE SWEETALERT2
+// ========================================
+const SwalConfig = {
+    customClass: {
+        popup: 'rounded-xl shadow-2xl',
+        title: 'text-2xl font-bold',
+        confirmButton: 'bg-red-900 hover:bg-red-800 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl',
+        cancelButton: 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-lg transition-all duration-200 ml-2'
+    },
+    buttonsStyling: false
+};
+
+// ========================================
+// UTILIDADES DE ALERTAS
+// ========================================
+const Alerts = {
+    success: (title, text = '') => {
+        return Swal.fire({
+            ...SwalConfig,
+            icon: 'success',
+            title: title,
+            text: text,
+            timer: 3000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+    },
+
+    error: (title, text = '') => {
+        return Swal.fire({
+            ...SwalConfig,
+            icon: 'error',
+            title: title,
+            text: text,
+            confirmButtonText: 'Entendido'
+        });
+    },
+
+    confirm: (title, text, confirmText = 'Confirmar', cancelText = 'Cancelar') => {
+        return Swal.fire({
+            ...SwalConfig,
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: confirmText,
+            cancelButtonText: cancelText,
+            reverseButtons: true
+        });
+    },
+
+    loading: (title = 'Procesando...', text = 'Por favor espera') => {
+        return Swal.fire({
+            ...SwalConfig,
+            title: title,
+            text: text,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    },
+
+    toast: (message, icon = 'success') => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        return Toast.fire({
+            icon: icon,
+            title: message
+        });
+    }
+};
+
 // Cart functionality
 const CartManager = {
     // Add item to cart via AJAX
     addToCart: async function(wineId, quantity = 1) {
         try {
+            Alerts.loading('Agregando al carrito...', 'Por favor espera');
+            
             const response = await fetch('/cart/add', {
                 method: 'POST',
                 headers: {
@@ -18,21 +106,26 @@ const CartManager = {
             
             const data = await response.json();
             
+            Swal.close();
+            
             if (data.success) {
                 this.updateCartCount(data.cart_count);
-                this.showNotification('Producto agregado al carrito', 'success');
+                Alerts.toast('¡Producto agregado al carrito!', 'success');
             } else {
-                this.showNotification(data.error || 'Error al agregar producto', 'error');
+                Alerts.error('Error', data.error || 'No se pudo agregar el producto');
             }
         } catch (error) {
             console.error('Error:', error);
-            this.showNotification('Error al agregar producto', 'error');
+            Swal.close();
+            Alerts.error('Error de conexión', 'No se pudo agregar el producto al carrito');
         }
     },
     
     // Update cart item quantity
     updateQuantity: async function(wineId, quantity) {
         try {
+            Alerts.loading('Actualizando cantidad...', 'Por favor espera');
+            
             const response = await fetch('/cart/update', {
                 method: 'POST',
                 headers: {
@@ -46,28 +139,47 @@ const CartManager = {
             
             const data = await response.json();
             
+            Swal.close();
+            
             if (data.success) {
                 this.updateCartCount(data.cart_count);
                 this.updateCartTotal(data.cart_total);
+                Alerts.toast('Cantidad actualizada', 'success');
+                
+                // Recargar la página para actualizar los totales
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                
                 return true;
             } else {
-                this.showNotification(data.error || 'Error al actualizar carrito', 'error');
+                Alerts.error('Error', data.error || 'No se pudo actualizar la cantidad');
                 return false;
             }
         } catch (error) {
             console.error('Error:', error);
-            this.showNotification('Error al actualizar carrito', 'error');
+            Swal.close();
+            Alerts.error('Error de conexión', 'No se pudo actualizar el carrito');
             return false;
         }
     },
     
     // Remove item from cart
-    removeItem: async function(wineId) {
-        if (!confirm('¿Estás seguro de eliminar este producto?')) {
+    removeItem: async function(wineId, wineName = 'este producto') {
+        const result = await Alerts.confirm(
+            '¿Eliminar producto?',
+            `¿Estás seguro de eliminar "${wineName}" del carrito?`,
+            'Sí, eliminar',
+            'Cancelar'
+        );
+        
+        if (!result.isConfirmed) {
             return;
         }
         
         try {
+            Alerts.loading('Eliminando producto...', 'Por favor espera');
+            
             const response = await fetch('/cart/remove', {
                 method: 'POST',
                 headers: {
@@ -80,21 +192,36 @@ const CartManager = {
             
             const data = await response.json();
             
+            Swal.close();
+            
             if (data.success) {
                 this.updateCartCount(data.cart_count);
                 this.updateCartTotal(data.cart_total);
+                
                 // Remove item from DOM
                 const itemElement = document.querySelector(`[data-wine-id="${wineId}"]`);
                 if (itemElement) {
-                    itemElement.remove();
+                    itemElement.style.opacity = '0';
+                    itemElement.style.transform = 'translateX(-100%)';
+                    itemElement.style.transition = 'all 0.3s ease';
+                    setTimeout(() => itemElement.remove(), 300);
                 }
-                this.showNotification('Producto eliminado', 'success');
+                
+                Alerts.toast('Producto eliminado del carrito', 'success');
+                
+                // Si no quedan items, recargar la página
+                if (data.cart_count === 0) {
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
             } else {
-                this.showNotification(data.error || 'Error al eliminar producto', 'error');
+                Alerts.error('Error', data.error || 'No se pudo eliminar el producto');
             }
         } catch (error) {
             console.error('Error:', error);
-            this.showNotification('Error al eliminar producto', 'error');
+            Swal.close();
+            Alerts.error('Error de conexión', 'No se pudo eliminar el producto');
         }
     },
     
@@ -119,23 +246,15 @@ const CartManager = {
         });
     },
     
-    // Show notification
+    // Show notification (deprecated - usar Alerts.toast)
     showNotification: function(message, type = 'info') {
-        // Create notification element
-        const notification = document.createElement('div');
-        notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg ${
-            type === 'success' ? 'bg-green-500' :
-            type === 'error' ? 'bg-red-500' :
-            'bg-blue-500'
-        } text-white`;
-        notification.textContent = message;
-        
-        document.body.appendChild(notification);
-        
-        // Remove after 3 seconds
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
+        if (type === 'success') {
+            Alerts.toast(message, 'success');
+        } else if (type === 'error') {
+            Alerts.toast(message, 'error');
+        } else {
+            Alerts.toast(message, 'info');
+        }
     }
 };
 
@@ -198,6 +317,19 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('change', function() {
             const wineId = this.dataset.wineId;
             const quantity = parseInt(this.value);
+            const maxStock = parseInt(this.max);
+            
+            if (quantity > maxStock) {
+                Alerts.warning('Stock insuficiente', `Solo hay ${maxStock} unidades disponibles`);
+                this.value = maxStock;
+                return;
+            }
+            
+            if (quantity < 1) {
+                this.value = 1;
+                return;
+            }
+            
             CartManager.updateQuantity(wineId, quantity);
         });
     });
@@ -207,7 +339,8 @@ document.addEventListener('DOMContentLoaded', function() {
     removeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const wineId = this.dataset.wineId;
-            CartManager.removeItem(wineId);
+            const wineName = this.dataset.wineName || 'este producto';
+            CartManager.removeItem(wineId, wineName);
         });
     });
     
@@ -269,3 +402,4 @@ document.addEventListener('DOMContentLoaded', function() {
 // Export for use in other scripts
 window.CartManager = CartManager;
 window.CheckoutManager = CheckoutManager;
+window.Alerts = Alerts;
