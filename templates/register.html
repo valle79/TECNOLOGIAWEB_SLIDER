@@ -4,17 +4,22 @@
 
 {% block content %}
 <div class="relative min-h-screen flex flex-col">
-  <img src="https://images.pexels.com/photos/3747463/pexels-photo-3747463.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" class="absolute inset-0 object-cover w-full h-full" alt="Background" />
-  <div class="relative flex-1 bg-gray-900 bg-opacity-75 flex items-center">
+  <!-- Imagen de fondo local -->
+  <img src="{{ url_for('static', filename='images/vinosol.jpg') }}" class="absolute inset-0 object-cover w-full h-full" alt="Vinos del Valle Background" />
+  
+  <!-- Overlay oscuro para mejorar legibilidad -->
+  <div class="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-red-900/60"></div>
+  
+  <div class="relative flex-1 flex items-center">
     <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20 w-full">
       <div class="flex flex-col items-center justify-between xl:flex-row">
         <!-- Left Content Section -->
         <div class="w-full max-w-xl mb-12 xl:mb-0 xl:pr-16 xl:w-7/12">
           <h2 class="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl sm:leading-none">
             Únete a<br class="hidden md:block" />
-            <span class="text-red-500">Vinos del Valle</span>
+            <span class="text-red-400">Vinos del Valle</span>
           </h2>
-          <p class="max-w-xl mb-4 text-base text-gray-300 md:text-lg">
+          <p class="max-w-xl mb-4 text-base text-gray-200 md:text-lg">
             Descubre una experiencia única en el mundo del vino. Crea tu cuenta, guarda tus favoritos, accede a ofertas exclusivas y recibe recomendaciones personalizadas. Bienvenido a nuestra comunidad vinícola.
           </p>
           <a href="{{ url_for('auth.login') }}" aria-label="Iniciar sesión" class="inline-flex items-center font-semibold tracking-wider transition-colors duration-200 text-red-400 hover:text-red-300">
