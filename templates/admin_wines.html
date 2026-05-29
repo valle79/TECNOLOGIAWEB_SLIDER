@@ -55,11 +55,10 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm space-x-3">
                         <a href="{{ url_for('admin.edit_wine', wine_id=wine.id) }}" class="text-blue-600 hover:text-blue-900 font-medium">Editar</a>
-                        <form action="{{ url_for('admin.delete_wine', wine_id=wine.id) }}" method="POST" class="inline">
+                        <form action="{{ url_for('admin.delete_wine', wine_id=wine.id) }}" method="POST" class="inline delete-wine-form">
                             <button type="button" 
                                     data-confirm-delete="{{ wine.name }}"
-                                    onclick="AdminAlerts.confirmDelete('{{ wine.name }}').then((result) => { if (result.isConfirmed) { AdminAlerts.loading('Eliminando vino...', 'Por favor espera'); this.closest('form').submit(); } })"
-                                    class="text-red-600 hover:text-red-900 font-medium">
+                                    class="text-red-600 hover:text-red-900 font-medium delete-wine-btn">
                                 Eliminar
                             </button>
                         </form>

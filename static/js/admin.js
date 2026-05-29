@@ -1,69 +1,147 @@
 /**
- * Admin Panel JavaScript - Professional Edition
+ * Admin Panel JavaScript - Professional Edition with SweetAlert2
  * Funcionalidad avanzada para el panel de administración
  */
 
 // ========================================
-// UTILIDADES DE ALERTAS (Sin dependencias externas)
+// UTILIDADES DE ALERTAS CON SWEETALERT2
 // ========================================
 const AdminAlerts = {
     // Alerta de éxito
     success: (title, text = '') => {
-        alert(`✅ ${title}\n${text}`);
+        return Swal.fire({
+            icon: 'success',
+            title: title,
+            text: text,
+            confirmButtonColor: '#7f1d1d',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
     },
 
     // Alerta de error
     error: (title, text = '') => {
-        alert(`❌ ${title}\n${text}`);
+        return Swal.fire({
+            icon: 'error',
+            title: title,
+            text: text,
+            confirmButtonColor: '#7f1d1d',
+            showClass: {
+                popup: 'animate__animated animate__shakeX'
+            }
+        });
     },
 
     // Alerta de advertencia
     warning: (title, text = '') => {
-        alert(`⚠️ ${title}\n${text}`);
+        return Swal.fire({
+            icon: 'warning',
+            title: title,
+            text: text,
+            confirmButtonColor: '#7f1d1d',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            }
+        });
     },
 
     // Alerta de información
     info: (title, text = '') => {
-        alert(`ℹ️ ${title}\n${text}`);
+        return Swal.fire({
+            icon: 'info',
+            title: title,
+            text: text,
+            confirmButtonColor: '#7f1d1d',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            }
+        });
     },
 
-    // Confirmación de eliminación
+    // Confirmación de eliminación con SweetAlert2
     confirmDelete: (itemName = 'este elemento') => {
-        return confirm(`¿Estás seguro?\n\nEstás a punto de eliminar "${itemName}".\nEsta acción no se puede deshacer.`);
+        return Swal.fire({
+            title: '¿Estás seguro?',
+            html: `Estás a punto de eliminar <strong>"${itemName}"</strong>.<br>Esta acción no se puede deshacer.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
     },
 
     // Confirmación genérica
     confirm: (title, text) => {
-        return confirm(`${title}\n\n${text}`);
+        return Swal.fire({
+            title: title,
+            text: text,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#7f1d1d',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sí, continuar',
+            cancelButtonText: 'Cancelar',
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            }
+        });
     },
 
-    // Toast notification (pequeña notificación)
+    // Loading/Cargando
+    loading: (title = 'Cargando...', text = 'Por favor espera') => {
+        Swal.fire({
+            title: title,
+            text: text,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    },
+
+    // Cerrar alerta actual
+    close: () => {
+        Swal.close();
+    },
+
+    // Toast notification con SweetAlert2
     toast: (message, type = 'success') => {
-        const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️';
-        
-        // Crear elemento de toast
-        const toast = document.createElement('div');
-        toast.className = 'fixed top-4 right-4 z-50 bg-white shadow-lg rounded-lg p-4 flex items-center space-x-3 animate-fade-in';
-        toast.style.minWidth = '300px';
-        toast.innerHTML = `
-            <span class="text-2xl">${icon}</span>
-            <span class="flex-1 text-gray-800">${message}</span>
-            <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-gray-600">✕</button>
-        `;
-        
-        document.body.appendChild(toast);
-        
-        // Auto-remover después de 3 segundos
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer);
+                toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+        });
+
+        Toast.fire({
+            icon: type,
+            title: message
+        });
     }
 };
 
 // Esperar a que el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     // ========================================
     // SIDEBAR MOBILE TOGGLE
     // ========================================
@@ -73,13 +151,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Toggle del sidebar cuando se hace clic en el botón hamburguesa
     if (sidebarToggle && sidebarMenu && sidebarOverlay) {
-        sidebarToggle.addEventListener('click', function() {
+        sidebarToggle.addEventListener('click', function () {
             sidebarMenu.classList.toggle('hidden');
             sidebarOverlay.classList.toggle('hidden');
         });
 
         // Cerrar sidebar cuando se hace clic en el overlay
-        sidebarOverlay.addEventListener('click', function() {
+        sidebarOverlay.addEventListener('click', function () {
             sidebarMenu.classList.add('hidden');
             sidebarOverlay.classList.add('hidden');
         });
@@ -87,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Cerrar sidebar cuando se selecciona un enlace (solo en mobile)
         const sidebarLinks = sidebarMenu.querySelectorAll('a');
         sidebarLinks.forEach(link => {
-            link.addEventListener('click', function() {
+            link.addEventListener('click', function () {
                 // Solo cerrar en dispositivos móviles (menos de 768px)
                 if (window.innerWidth < 768) {
                     sidebarMenu.classList.add('hidden');
@@ -100,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     // CERRAR SIDEBAR AL CAMBIAR TAMAÑO DE VENTANA
     // ========================================
-    window.addEventListener('resize', function() {
+    window.addEventListener('resize', function () {
         // Si la ventana se hace más grande que mobile, asegurar que el sidebar esté visible
         if (window.innerWidth >= 768) {
             if (sidebarMenu) sidebarMenu.classList.remove('hidden');
@@ -116,13 +194,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // CONFIRMACIÓN DE ELIMINACIÓN MEJORADA
     // ========================================
     const deleteButtons = document.querySelectorAll('[data-confirm-delete]');
+    console.log('Botones de eliminar encontrados:', deleteButtons.length);
+
     deleteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
             const itemName = this.getAttribute('data-confirm-delete') || 'este elemento';
-            
-            if (!AdminAlerts.confirmDelete(itemName)) {
-                e.preventDefault();
+            const form = this.closest('form');
+
+            console.log('Botón clickeado:', itemName);
+            console.log('Formulario encontrado:', form);
+            console.log('Action del formulario:', form ? form.action : 'N/A');
+            console.log('Method del formulario:', form ? form.method : 'N/A');
+
+            if (!form) {
+                console.error('No se encontró el formulario');
+                AdminAlerts.error('Error', 'No se pudo encontrar el formulario');
+                return;
             }
+
+            AdminAlerts.confirmDelete(itemName).then((result) => {
+                console.log('Resultado de confirmación:', result);
+                if (result.isConfirmed) {
+                    console.log('Usuario confirmó eliminación');
+                    AdminAlerts.loading('Eliminando...', 'Por favor espera');
+
+                    // Usar setTimeout para asegurar que el loading se muestre
+                    setTimeout(() => {
+                        console.log('Enviando formulario ahora...');
+                        Swal.close(); // 👈 IMPORTANTE
+                        form.requestSubmit(); // 👈 CLAVE
+                    }, 100);
+                } else {
+                    console.log('Usuario canceló eliminación');
+                }
+            }).catch((error) => {
+                console.error('Error en confirmDelete:', error);
+            });
         });
     });
 
@@ -131,12 +241,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     const confirmForms = document.querySelectorAll('[data-confirm-submit]');
     confirmForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
             const message = this.getAttribute('data-confirm-submit') || '¿Deseas continuar con esta acción?';
-            
-            if (!AdminAlerts.confirm('Confirmar acción', message)) {
-                e.preventDefault();
-            }
+
+            AdminAlerts.confirm('Confirmar acción', message).then((result) => {
+                if (result.isConfirmed) {
+                    this.submit();
+                }
+            });
         });
     });
 
@@ -145,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     const adminForms = document.querySelectorAll('form[data-validate]');
     adminForms.forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             const requiredFields = form.querySelectorAll('[required]');
             let isValid = true;
             let firstInvalidField = null;
@@ -178,9 +291,9 @@ document.addEventListener('DOMContentLoaded', function() {
     flashMessages.forEach(message => {
         const type = message.getAttribute('data-flash-type') || 'info';
         const text = message.getAttribute('data-flash-message');
-        
+
         AdminAlerts.toast(text, type);
-        
+
         // Remover el elemento del DOM
         message.remove();
     });
@@ -190,15 +303,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     const statusButtons = document.querySelectorAll('[data-change-status]');
     statusButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
+        button.addEventListener('click', function (e) {
             e.preventDefault();
             const newStatus = this.getAttribute('data-change-status');
             const itemName = this.getAttribute('data-item-name') || 'este elemento';
-            
-            if (AdminAlerts.confirm('Cambiar estado', `¿Deseas cambiar el estado de ${itemName} a "${newStatus}"?`)) {
-                const form = this.closest('form');
-                if (form) form.submit();
-            }
+            const form = this.closest('form');
+
+            AdminAlerts.confirm('Cambiar estado', `¿Deseas cambiar el estado de ${itemName} a "${newStatus}"?`).then((result) => {
+                if (result.isConfirmed) {
+                    if (form) form.submit();
+                }
+            });
         });
     });
 
@@ -207,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     const imageInputs = document.querySelectorAll('input[type="file"][accept*="image"]');
     imageInputs.forEach(input => {
-        input.addEventListener('change', function(e) {
+        input.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 // Validar tamaño (máx 16MB)
@@ -228,7 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const preview = document.getElementById('image-preview');
                 if (preview) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         preview.src = e.target.result;
                         preview.classList.remove('hidden');
                         AdminAlerts.toast('Imagen cargada correctamente', 'success');
@@ -248,18 +363,18 @@ document.addEventListener('DOMContentLoaded', function() {
     autoSaveForms.forEach(form => {
         let saveTimeout;
         const inputs = form.querySelectorAll('input, textarea, select');
-        
+
         inputs.forEach(input => {
-            input.addEventListener('input', function() {
+            input.addEventListener('input', function () {
                 clearTimeout(saveTimeout);
-                
+
                 // Mostrar indicador de "guardando..."
                 const indicator = document.getElementById('save-indicator');
                 if (indicator) {
                     indicator.textContent = '💾 Guardando...';
                     indicator.classList.remove('hidden');
                 }
-                
+
                 saveTimeout = setTimeout(() => {
                     if (indicator) {
                         indicator.textContent = '✅ Guardado';
@@ -291,12 +406,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const maxLength = parseInt(textarea.getAttribute('data-max-length'));
         const counterId = textarea.getAttribute('data-counter-id');
         const counter = counterId ? document.getElementById(counterId) : null;
-        
+
         if (counter) {
             const updateCounter = () => {
                 const remaining = maxLength - textarea.value.length;
                 counter.textContent = `${remaining} caracteres restantes`;
-                
+
                 if (remaining < 0) {
                     counter.classList.add('text-red-600');
                     counter.classList.remove('text-gray-600');
@@ -308,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     counter.classList.remove('text-yellow-600', 'text-red-600');
                 }
             };
-            
+
             textarea.addEventListener('input', updateCounter);
             updateCounter(); // Inicializar
         }
@@ -319,12 +434,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // ========================================
     const copyButtons = document.querySelectorAll('[data-copy-text]');
     copyButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const textToCopy = this.getAttribute('data-copy-text');
-            
+
             navigator.clipboard.writeText(textToCopy).then(() => {
                 AdminAlerts.toast('Copiado al portapapeles', 'success');
-                
+
                 // Cambiar texto del botón temporalmente
                 const originalText = this.textContent;
                 this.textContent = '✓ Copiado';
