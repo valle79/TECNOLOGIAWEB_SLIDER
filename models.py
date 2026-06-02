@@ -515,17 +515,31 @@ class User:
     @staticmethod
     def verify_password(email: str, password: str) -> Optional[Dict]:
         """Verify user password and return user data if valid"""
+        logger.info(f"🔍 Buscando usuario: {email}")
         user = User.get_by_email(email)
 
         if not user:
+            logger.warning(f"❌ Usuario no encontrado: {email}")
             return None
 
-        if bcrypt.checkpw(password.encode('utf-8'), user['password_hash'].encode('utf-8')):
-            # Remove password hash from returned data
-            user.pop('password_hash', None)
-            return user
-
-        return None
+        logger.info(f"✅ Usuario encontrado: {email}")
+        logger.info(f"📋 Usuario info - ID: {user.get('id')}, Admin: {user.get('is_admin')}, Name: {user.get('full_name')}")
+        
+        try:
+            password_hash = user['password_hash']
+            logger.info(f"🔐 Verificando contraseña... (hash existe: {bool(password_hash)})")
+            
+            if bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
+                logger.info(f"✅ Contraseña correcta para: {email}")
+                # Remove password hash from returned data
+                user.pop('password_hash', None)
+                return user
+            else:
+                logger.warning(f"❌ Contraseña incorrecta para: {email}")
+                return None
+        except Exception as e:
+            logger.error(f"❌ Error al verificar contraseña para {email}: {e}")
+            return None
 
     @staticmethod
     def update(user_id: str, user_data: Dict) -> bool:

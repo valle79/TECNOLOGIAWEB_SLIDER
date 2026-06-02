@@ -5,6 +5,10 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from models import User
 from services import CartService
 import re
+import logging
+
+# Configure logger
+logger = logging.getLogger(__name__)
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -25,13 +29,19 @@ def login():
     email = request.form.get('email')
     password = request.form.get('password')
 
+    logger.info(f"🔐 Intento de login - Email: {email}")
+
     if not email or not password:
+        logger.warning(f"❌ Login fallido - Campos vacíos")
         flash('Email y contraseña son requeridos', 'error')
         return redirect(url_for('auth.login'))
 
+    logger.info(f"🔍 Verificando credenciales para: {email}")
     user = User.verify_password(email, password)
 
     if user:
+        logger.info(f"✅ Login exitoso - Usuario: {user['email']}, Admin: {user.get('is_admin', False)}")
+        
         session['user_id'] = user['id']
         session['user_email'] = user['email']
         session['user_name'] = user['full_name']
@@ -41,14 +51,18 @@ def login():
 
         # Redirect to admin panel if admin
         if user.get('is_admin'):
+            logger.info(f"🔑 Usuario es admin, redirigiendo al panel de administración")
             return redirect(url_for('admin.dashboard'))
 
         # Redirect to checkout if cart has items
         if CartService.get_cart_count() > 0:
+            logger.info(f"🛒 Usuario tiene items en el carrito, redirigiendo a checkout")
             return redirect(url_for('order.checkout'))
 
+        logger.info(f"🏠 Redirigiendo al inicio")
         return redirect(url_for('main.index'))
     else:
+        logger.warning(f"❌ Login fallido - Credenciales incorrectas para: {email}")
         flash('Email o contraseña incorrectos', 'error')
         return redirect(url_for('auth.login'))
 
