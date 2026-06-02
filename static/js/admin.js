@@ -4,6 +4,18 @@
  */
 
 // ========================================
+// APLICAR TEMA DINÁMICO
+// ========================================
+(function() {
+    const themeColor = document.body.dataset.themeColor;
+    if (themeColor) {
+        document.documentElement.style.setProperty('--theme-color', themeColor);
+        document.documentElement.style.setProperty('--theme-color-dark', themeColor + 'dd');
+        document.documentElement.style.setProperty('--theme-color-darker', themeColor + 'bb');
+    }
+})();
+
+// ========================================
 // UTILIDADES DE ALERTAS CON SWEETALERT2
 // ========================================
 const AdminAlerts = {

@@ -1,0 +1,29 @@
+/**
+ * Site Theme Dynamic Styles
+ * Estilos dinámicos para el tema del sitio
+ */
+
+:root {
+    --theme-color: #7f1d1d;
+    --theme-color-light: #7f1d1dee;
+    --theme-color-dark: #7f1d1ddd;
+}
+
+/* Navbar with theme color */
+.theme-navbar {
+    background: linear-gradient(to right, var(--theme-color), var(--theme-color-light), var(--theme-color)) !important;
+}
+
+/* Footer with theme color */
+.theme-footer {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-color-dark) 100%) !important;
+}
+
+/* Buttons with theme color */
+.theme-btn {
+    background: var(--theme-color) !important;
+}
+
+.theme-btn:hover {
+    background: var(--theme-color-dark) !important;
+}

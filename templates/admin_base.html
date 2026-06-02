@@ -6,17 +6,22 @@
     <title>{% block title %}Panel de Administración - Vinos del Valle{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui/material-ui.css">
+    
     <!-- Animate.css para animaciones de SweetAlert2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <!-- Admin Theme Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin-theme.css') }}">
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" data-theme-color="{{ theme_color }}">
     <div class="flex h-screen overflow-hidden">
         <!-- SIDEBAR -->
-        <aside id="sidebarMenu" class="w-64 bg-red-900 text-white fixed md:relative h-screen overflow-y-auto shadow-lg z-50 hidden md:block transition-all duration-300">
-            <div class="p-6 border-b border-red-800">
+        <aside id="sidebarMenu" class="w-64 theme-bg text-white fixed md:relative h-screen overflow-y-auto shadow-lg z-50 hidden md:block transition-all duration-300">
+            <div class="p-6 border-b theme-border">
                 <a href="{{ url_for('main.index') }}" class="flex items-center gap-3 text-xl font-bold hover:text-red-100 transition">
                     <i class='bx bxs-wine text-2xl'></i>
                     <span>Vinos Admin</span>
@@ -27,32 +32,31 @@
             <nav class="p-6">
                 <ul class="space-y-2">
                     <li>
-                        <a href="{{ url_for('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint == 'admin.dashboard' %}bg-red-800 text-white{% else %}text-red-100 hover:bg-red-800{% endif %} transition">
+                        <a href="{{ url_for('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint == 'admin.dashboard' %}theme-bg-darker text-white{% else %}text-red-100 theme-hover{% endif %} transition">
                             <i class='bx bxs-dashboard text-lg'></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url_for('admin.wines') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint in ['admin.wines', 'admin.add_wine', 'admin.edit_wine'] %}bg-red-800 text-white{% else %}text-red-100 hover:bg-red-800{% endif %} transition">
+                        <a href="{{ url_for('admin.wines') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint in ['admin.wines', 'admin.add_wine', 'admin.edit_wine'] %}theme-bg-darker text-white{% else %}text-red-100 theme-hover{% endif %} transition">
                             <i class='bx bxs-wine text-lg'></i>
                             <span>Vinos</span>
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url_for('admin.orders') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint in ['admin.orders', 'admin.order_detail'] %}bg-red-800 text-white{% else %}text-red-100 hover:bg-red-800{% endif %} transition">
+                        <a href="{{ url_for('admin.orders') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint in ['admin.orders', 'admin.order_detail'] %}theme-bg-darker text-white{% else %}text-red-100 theme-hover{% endif %} transition">
                             <i class='bx bxs-shopping-bag-alt text-lg'></i>
                             <span>Pedidos</span>
                         </a>
                     </li>
-
                 </ul>
             </nav>
 
             <!-- Menu Bottom -->
-            <div class="absolute bottom-0 left-0 right-0 p-6 border-t border-red-800 bg-red-900">
+            <div class="absolute bottom-0 left-0 right-0 p-6 border-t theme-border theme-bg">
                 <ul class="space-y-2">
                     <li>
-                        <a href="#" class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-100 hover:bg-red-800 transition">
+                        <a href="{{ url_for('admin.settings') }}" class="flex items-center gap-3 px-4 py-3 rounded-lg {% if request.endpoint == 'admin.settings' %}theme-bg-darker text-white{% else %}text-red-100 theme-hover{% endif %} transition">
                             <i class='bx bxs-cog text-lg'></i>
                             <span>Configuración</span>
                         </a>
@@ -138,7 +142,19 @@
     <!-- Overlay Backdrop (Mobile) -->
     <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"></div>
 
-    <!-- JavaScript Externo -->
-    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<!-- FLASH -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div 
+                data-flash-message="{{ message | e }}"
+                data-flash-type="{{ category }}">
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<!-- JS -->
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 </body>
 </html>

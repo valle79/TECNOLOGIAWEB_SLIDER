@@ -1,0 +1,35 @@
+/**
+ * Admin Panel Dynamic Theme Styles
+ * Estilos dinámicos para el panel de administración
+ */
+
+:root {
+    --theme-color: #7f1d1d;
+    --theme-color-dark: #7f1d1ddd;
+    --theme-color-darker: #7f1d1dbb;
+}
+
+/* Apply theme color to sidebar */
+.theme-bg {
+    background-color: var(--theme-color) !important;
+}
+
+.theme-bg-dark {
+    background-color: var(--theme-color-dark) !important;
+}
+
+.theme-bg-darker {
+    background-color: var(--theme-color-darker) !important;
+}
+
+.theme-border {
+    border-color: var(--theme-color-darker) !important;
+}
+
+.theme-text {
+    color: var(--theme-color) !important;
+}
+
+.theme-hover:hover {
+    background-color: var(--theme-color-darker) !important;
+}

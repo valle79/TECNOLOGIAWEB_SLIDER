@@ -88,12 +88,19 @@ def create_app(config_name='development'):
     @app.context_processor
     def inject_globals():
         from services import CartService
+        from settings_model import SiteSettings
         from flask import session
+        
+        # Get site settings
+        settings = SiteSettings.get_all()
+        
         return {
             'cart_count': CartService.get_cart_count(),
             'is_logged_in': 'user_id' in session,
             'is_admin': session.get('is_admin', False),
-            'user_name': session.get('user_name')
+            'user_name': session.get('user_name'),
+            'site_settings': settings,
+            'theme_color': settings.get('theme_color', '#7f1d1d')
         }
     
     # Cleanup on shutdown

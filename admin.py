@@ -1,9 +1,10 @@
 """
 Admin panel routes
 """
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from functools import wraps
 from models import Wine, Order
+from settings_model import SiteSettings
 from services import CartService, OrderService
 import cloudinary_service
 import logging
@@ -269,3 +270,54 @@ def update_order_status(order_id):
         flash('Error al actualizar el estado', 'error')
 
     return redirect(url_for('admin.order_detail', order_id=order_id))
+
+
+@admin_bp.route('/settings', methods=['GET'])
+@admin_required
+def settings():
+    """Admin settings page"""
+    settings_data = SiteSettings.get_by_category()
+    cart_count = CartService.get_cart_count()
+    
+    return render_template('admin_settings.html',
+                         settings=settings_data,
+                         cart_count=cart_count)
+
+
+@admin_bp.route('/settings/update', methods=['POST'])
+@admin_required
+def update_settings():
+    """Update site settings"""
+    try:
+        # Get all form data
+        settings_to_update = {}
+        
+        for key in request.form:
+            if key != 'csrf_token':  # Skip CSRF token if present
+                settings_to_update[key] = request.form[key]
+        
+        # Update settings
+        success = SiteSettings.update_multiple(settings_to_update)
+        
+        if success:
+            flash('Configuración actualizada exitosamente', 'success')
+        else:
+            flash('Error al actualizar la configuración', 'error')
+    
+    except Exception as e:
+        logger.error(f"Error updating settings: {e}")
+        flash('Error al actualizar la configuración', 'error')
+    
+    return redirect(url_for('admin.settings'))
+
+
+@admin_bp.route('/settings/theme-preview', methods=['POST'])
+@admin_required
+def theme_preview():
+    """Preview theme color change (AJAX)"""
+    try:
+        color = request.json.get('color', '#7f1d1d')
+        return jsonify({'success': True, 'color': color})
+    except Exception as e:
+        logger.error(f"Error in theme preview: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 400

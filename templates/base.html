@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -15,11 +15,14 @@
     <!-- Animate.css para animaciones de SweetAlert2 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     
+    <!-- Site Theme Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50" data-theme-color="{{ theme_color }}">
     <!-- Navbar -->
-    <nav class="bg-gradient-to-r from-red-900 via-red-800 to-red-900 shadow-xl sticky top-0 z-50">
+    <nav class="theme-navbar shadow-xl sticky top-0 z-50">
         <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20">
                 <!-- Logo and Desktop Menu -->
@@ -144,26 +147,13 @@
         </div>
     </nav>
 
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-                {% for category, message in messages %}
-                    <div class="rounded-md p-4 mb-4 {% if category == 'error' %}bg-red-50 text-red-800{% elif category == 'success' %}bg-green-50 text-green-800{% elif category == 'warning' %}bg-yellow-50 text-yellow-800{% else %}bg-blue-50 text-blue-800{% endif %}">
-                        <p>{{ message }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
     <!-- Main Content -->
     <main>
         {% block content %}{% endblock %}
     <!-- Footer -->
-    <footer class="relative bg-red-800 text-white mt-16 overflow-hidden">
+    <footer class="relative theme-footer text-white mt-16 overflow-hidden">
         <!-- Decorative Wave SVG -->
-        <svg class="absolute top-0 w-full h-6 -mt-5 sm:-mt-10 sm:h-16 text-red-800" preserveAspectRatio="none" viewBox="0 0 1440 54">
+        <svg class="absolute top-0 w-full h-6 -mt-5 sm:-mt-10 sm:h-16" style="color: var(--theme-color);" preserveAspectRatio="none" viewBox="0 0 1440 54">
             <path fill="currentColor" d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"></path>
         </svg>
 
@@ -292,6 +282,7 @@
     <script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
     <script src="{{ url_for('static', filename='js/hero-carousel.js') }}"></script>
     <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     
 </body>
 </html>
