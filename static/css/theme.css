@@ -27,3 +27,17 @@
 .theme-btn:hover {
     background: var(--theme-color-dark) !important;
 }
+
+.theme-footer{
+    background:
+        linear-gradient(
+            135deg,
+            #5f0f18 0%,
+            #7f1734 35%,
+            #450a0a 100%
+        );
+}
+
+.theme-footer a{
+    transition: all .3s ease;
+}

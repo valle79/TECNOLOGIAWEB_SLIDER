@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <title>{% block title %}Vinos del Valle - Venta de Vinos Premium{% endblock %}</title>
     
     <!-- Tailwind CSS (compiled locally) -->
@@ -153,9 +154,7 @@
     <!-- Footer -->
     <footer class="relative theme-footer text-white mt-16 overflow-hidden">
         <!-- Decorative Wave SVG -->
-        <svg class="absolute top-0 w-full h-6 -mt-5 sm:-mt-10 sm:h-16" style="color: var(--theme-color);" preserveAspectRatio="none" viewBox="0 0 1440 54">
-            <path fill="currentColor" d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"></path>
-        </svg>
+
 
         <div class="px-4 pt-8 sm:pt-12 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8">
             <div class="grid gap-8 sm:gap-12 md:gap-16 row-gap-10 mb-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-6">
@@ -284,5 +283,6 @@
     <script src="{{ url_for('static', filename='js/slider.js') }}"></script>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

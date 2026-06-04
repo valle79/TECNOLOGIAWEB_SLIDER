@@ -2,6 +2,14 @@
 
 {% block title %}Nosotros - Vitivinícola San Roque{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/team-carousel.css') }}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/team-carousel.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 
 <!-- HERO -->
@@ -126,6 +134,71 @@
         </div>
         {% endfor %}
 
+    </div>
+</section>
+
+<!-- NUESTRO EQUIPO -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <p class="text-red-600 font-semibold text-sm uppercase tracking-widest mb-2">DISCOVER OUR TEAM</p>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">
+                Nuestro Equipo
+            </h2>
+            <p class="text-gray-600 text-lg max-w-2xl mx-auto">
+                Expertos apasionados en vinos con años de experiencia en la industria vinícola internacional.
+            </p>
+        </div>
+
+        <!-- Team Carousel Container -->
+        <div class="team-carousel-container" id="teamCarousel">
+            <div class="team-carousel-grid">
+                <!-- Images Section -->
+                <div class="team-images-container" id="teamImagesContainer">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" 
+                         alt="Luis Valle" 
+                         class="team-member-image" 
+                         data-index="0">
+                    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" 
+                         alt="Marta Clermont" 
+                         class="team-member-image" 
+                         data-index="1">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400" 
+                         alt="Alice Melbourne" 
+                         class="team-member-image" 
+                         data-index="2">
+                    <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400" 
+                         alt="John Doe" 
+                         class="team-member-image" 
+                         data-index="3">
+                </div>
+
+                <!-- Content Section -->
+                <div class="team-content">
+                    <div class="team-info" id="teamInfo">
+                        <h3 class="team-member-name" id="teamName">Luis Valle</h3>
+                        <p class="team-member-role" id="teamRole">Product Manager</p>
+                        <p class="team-member-quote" id="teamQuote">
+                            Nuestra pasión es crear vinos excepcionales que cuenten la historia de nuestros valles. 
+                            Cada botella es una obra de arte que refleja años de dedicación y amor por la viticultura.
+                        </p>
+                    </div>
+
+                    <div class="team-nav-buttons">
+                        <button class="team-nav-button" id="teamPrevBtn" aria-label="Anterior">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                            </svg>
+                        </button>
+                        <button class="team-nav-button" id="teamNextBtn" aria-label="Siguiente">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 

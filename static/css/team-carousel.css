@@ -1,0 +1,162 @@
+/**
+ * Team Carousel Styles
+ * Carousel circular profesional para la sección de equipo
+ */
+
+.team-carousel-container {
+    width: 100%;
+    max-width: 56rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.team-carousel-grid {
+    display: grid;
+    gap: 5rem;
+}
+
+.team-images-container {
+    position: relative;
+    width: 100%;
+    height: 24rem;
+    perspective: 1000px;
+}
+
+.team-member-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: all 0.8s cubic-bezier(0.4, 2, 0.3, 1);
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.team-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.team-info {
+    min-height: 250px;
+}
+
+.team-member-name {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #7f1d1d;
+    margin-bottom: 0.5rem;
+    animation: fadeInUp 0.3s ease-in-out;
+}
+
+.team-member-role {
+    font-size: 0.925rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.3s ease-in-out 0.1s backwards;
+}
+
+.team-member-quote {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    color: #4b5563;
+    animation: fadeInWords 0.3s ease-in-captionout;
+}
+
+.team-nav-buttons {
+    display: flex;
+    gap: 1.5rem;
+    padding-top: 3rem;
+}
+
+.team-nav-button {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background-color: #141414;
+    color: #f1f1f7;
+}
+
+.team-nav-button:hover {
+    background-color: #7f1d1d;
+    transform: scale(1.1);
+}
+
+.team-nav-button:active {
+    transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInWords {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Word animation for quote */
+.team-member-quote .word {
+    display: inline-block;
+    opacity: 0;
+    animation: wordFadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes wordFadeIn {
+    from {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(5px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+    .team-carousel-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .team-nav-buttons {
+        padding-top: 0;
+    }
+}
+
+@media (max-width: 767px) {
+    .team-images-container {
+        height: 20rem;
+    }
+    
+    .team-member-name {
+        font-size: 1.5rem;
+    }
+    
+    .team-member-quote {
+        font-size: 1rem;
+    }
+}
