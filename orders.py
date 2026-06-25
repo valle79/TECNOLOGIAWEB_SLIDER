@@ -4,6 +4,7 @@ Order processing routes
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash, session
 from services import CartService, OrderService
 from models import Order
+from email_service import EmailService
 
 order_bp = Blueprint('order', __name__, url_prefix='/orders')
 
@@ -62,9 +63,14 @@ def create_order():
 
     try:
         user_id = session.get('user_id')
+        cart_items_before = CartService.get_cart_items()
         order_id = OrderService.create_order_from_cart(customer_data, user_id)
 
         if order_id:
+            order_summary = OrderService.get_order_summary(order_id)
+            if order_summary:
+                EmailService.send_order_confirmation(order_summary, cart_items_before)
+
             flash('¡Pedido creado exitosamente!', 'success')
             return redirect(url_for('order.confirmation', order_id=order_id))
         else:

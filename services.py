@@ -18,13 +18,14 @@ class CartService:
         return session.get(CartService.CART_SESSION_KEY, {})
 
     @staticmethod
-    def add_item(wine_id: str, quantity: int = 1) -> bool:
+    def add_item(wine_id: str, quantity: int = 1, is_box: bool = False) -> bool:
         """
         Add item to cart
 
         Args:
             wine_id: Wine ID to add
-            quantity: Quantity to add
+            quantity: Quantity to add (in units)
+            is_box: Whether the item was added as a box (12 units)
 
         Returns:
             True if successful, False otherwise
@@ -45,7 +46,8 @@ class CartService:
                 'price': float(wine['price']),
                 'image_url': wine['image_url'],
                 'quantity': quantity,
-                'stock': wine['stock']
+                'stock': wine['stock'],
+                'is_box': is_box
             }
 
         # Ensure quantity doesn't exceed stock

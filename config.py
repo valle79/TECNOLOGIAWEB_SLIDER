@@ -27,6 +27,13 @@ class Config:
     MAX_CONTENT_LENGTH = int(os.getenv('MAX_CONTENT_LENGTH', 16 * 1024 * 1024))  # 16MB
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     
+    # Email Configuration (SMTP)
+    MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
+    MAIL_PORT = int(os.getenv('MAIL_PORT', 587))
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME', '')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', '')
+    MAIL_USE_TLS = os.getenv('MAIL_USE_TLS', 'true').lower() == 'true'
+
     # Shipping rates
     INTERNATIONAL_SHIPPING_RATE = float(os.getenv('INTERNATIONAL_SHIPPING_RATE', 25.00))
     LOCAL_SHIPPING_RATE = float(os.getenv('LOCAL_SHIPPING_RATE', 10.00))

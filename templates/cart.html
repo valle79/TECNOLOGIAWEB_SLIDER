@@ -6,11 +6,11 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
     <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 flex items-center gap-2">
         🛒 Carrito de Compras 
-        <span class="text-sm bg-red-100 text-red-800 px-2 py-1 rounded-full">{{ cart_items|length }}</span>
+        <span class="text-sm bg-red-100 text-red-800 px-2 py-1 rounded-full cart-count-label">{{ cart_items|length }}</span>
     </h1>
     
     {% if cart_items %}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+    <div class="cart-container grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         <!-- Cart Items -->
         <div class="lg:col-span-2 space-y-4">
             {% for item in cart_items %}
@@ -24,12 +24,22 @@
                     <!-- Details -->
                     <div class="flex-1 min-w-0">
                         <h3 class="text-lg font-bold text-gray-900 mb-1 truncate">{{ item.name }}</h3>
-                        <p class="text-red-800 font-semibold text-lg mb-1">S/ {{ "%.2f"|format(item.price) }} c/u</p>
+                        <p class="text-red-800 font-semibold text-lg mb-1 item-price" data-price="{{ item.price }}">
+                            S/ {{ "%.2f"|format(item.price) }} c/u
+                            {% if item.get('is_box') %}
+                            <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">Caja</span>
+                            {% else %}
+                            <span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">Unidad</span>
+                            {% endif %}
+                        </p>
                         <p class="text-sm text-gray-500">
                             <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
-                            Stock: {{ item.stock }} unidades
+                            {{ item.quantity }} unidades
+                            {% if item.get('is_box') and item.quantity >= 12 %}
+                            ({{ (item.quantity / 12)|round(0, 'floor')|int }} cajas)
+                            {% endif %}
                         </p>
                     </div>
                     
@@ -49,7 +59,7 @@
                         <!-- Subtotal -->
                         <div class="text-right">
                             <p class="text-sm text-gray-500 mb-1">Subtotal</p>
-                            <p class="text-xl font-bold text-red-800">
+                            <p class="text-xl font-bold text-red-800 item-subtotal">
                                 S/ {{ "%.2f"|format(item.price * item.quantity) }}
                             </p>
                         </div>
@@ -90,7 +100,7 @@
                     </div>
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-gray-500">Items:</span>
-                        <span class="text-gray-700 font-medium">{{ cart_items|length }}</span>
+                        <span class="text-gray-700 font-medium cart-count-label">{{ cart_items|length }}</span>
                     </div>
                 </div>
                 
@@ -114,7 +124,7 @@
         </div>
     </div>
     {% else %}
-    <div class="text-center py-16 bg-white rounded-xl shadow-lg">
+    <div class="cart-container text-center py-16 bg-white rounded-xl shadow-lg">
         <div class="max-w-md mx-auto px-4">
             <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>

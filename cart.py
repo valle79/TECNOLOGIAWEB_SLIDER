@@ -27,6 +27,9 @@ def add_to_cart():
 
     wine_id = data.get('wine_id')
     quantity = int(data.get('quantity', 1))
+    is_box = data.get('is_box', False)
+    if isinstance(is_box, str):
+        is_box = is_box.lower() in ('true', '1', 'yes')
 
     if not wine_id:
         if request.is_json:
@@ -37,7 +40,7 @@ def add_to_cart():
         flash('Error: ID de vino requerido', 'error')
         return redirect(request.referrer or url_for('main.index'))
 
-    success = CartService.add_item(wine_id, quantity)
+    success = CartService.add_item(wine_id, quantity, is_box)
 
     if request.is_json:
         if success:

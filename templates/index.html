@@ -8,6 +8,33 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/team-carousel.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.cart-unit-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const container = this.closest('[data-wine-id]');
+            if (!container) return;
+            container.querySelectorAll('.cart-unit-toggle').forEach(b => {
+                b.classList.remove('bg-red-800', 'text-white');
+                b.classList.add('text-gray-600');
+            });
+            this.classList.add('bg-red-800', 'text-white');
+            this.classList.remove('text-gray-600');
+        });
+    });
+
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const wineId = this.dataset.wineId;
+            const toggleContainer = this.parentElement.querySelector('[data-wine-id]');
+            const activeToggle = toggleContainer ? toggleContainer.querySelector('.cart-unit-toggle.bg-red-800') : null;
+            const isBox = activeToggle ? activeToggle.dataset.mode === 'box' : false;
+            const quantity = isBox ? 12 : 1;
+            window.CartManager.addToCart(wineId, quantity, isBox);
+        });
+    });
+});
+</script>
 {% endblock %}
 
 {% block content %}
@@ -237,14 +264,23 @@
                                     class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2.5 rounded-lg transition-all duration-200 text-sm font-semibold text-center">
                                     Detalles
                                 </a>
-                                <form action="{{ url_for('cart.add_to_cart') }}" method="POST" class="inline">
-                                    <input type="hidden" name="wine_id" value="{{ wine.id }}">
-                                    <input type="hidden" name="quantity" value="1">
-                                    <button type="submit"
-                                        class="w-full bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-950 text-white px-4 py-2.5 rounded-lg transition-all duration-200 text-sm font-bold shadow-md hover:shadow-lg transform hover:scale-105">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="flex items-center bg-gray-100 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0" data-wine-id="{{ wine.id }}">
+                                        <button type="button" class="cart-unit-toggle px-2 py-2.5 text-xs font-bold bg-red-800 text-white transition-colors duration-150 leading-none" data-mode="unit" title="Comprar por unidad">
+                                            1u
+                                        </button>
+                                        {% if wine.stock and wine.stock >= 12 %}
+                                        <button type="button" class="cart-unit-toggle px-2 py-2.5 text-xs font-bold text-gray-600 hover:text-red-800 transition-colors duration-150 leading-none" data-mode="box" title="Caja de 12 unidades">
+                                            12u
+                                        </button>
+                                        {% endif %}
+                                    </div>
+                                    <button type="button"
+                                        class="add-to-cart-btn flex-1 bg-gradient-to-r from-red-800 to-red-900 hover:from-red-900 hover:to-red-950 text-white px-4 py-2.5 rounded-lg transition-all duration-200 text-sm font-bold shadow-md hover:shadow-lg transform hover:scale-105"
+                                        data-wine-id="{{ wine.id }}">
                                         🛒 Agregar
                                     </button>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>

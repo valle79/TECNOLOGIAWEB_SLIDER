@@ -54,22 +54,148 @@
                 </div>
                 {% endif %}
 
-                <!-- Add to Cart Form -->
+                <!-- Add to Cart Section -->
                 {% if wine.stock > 0 %}
-                <form action="{{ url_for('cart.add_to_cart') }}" method="POST" class="space-y-4">
-                    <input type="hidden" name="wine_id" value="{{ wine.id }}">
-                    
+                <div class="space-y-4">
+                    <!-- Tipo de compra: Unidad / Caja -->
                     <div>
-                        <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">Cantidad</label>
-                        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ wine.stock }}"
-                               class="w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipo de compra</label>
+                        <div class="flex bg-gray-100 rounded-lg p-1 w-fit border border-gray-200" id="purchase-type">
+                            <button type="button" class="purchase-mode px-5 py-2 rounded-md text-sm font-bold bg-red-800 text-white shadow-sm transition-all duration-200" data-mode="unit">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Unidad
+                            </button>
+                            {% if wine.stock >= 12 %}
+                            <button type="button" class="purchase-mode px-5 py-2 rounded-md text-sm font-bold text-gray-600 hover:text-red-800 transition-all duration-200" data-mode="box">
+                                <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                Caja (12 uds)
+                            </button>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    <button type="submit"
-                            class="w-full bg-red-800 text-white px-6 py-3 rounded-lg hover:bg-red-900 font-medium">
+                    <div>
+                        <label for="detail-quantity" class="block text-sm font-medium text-gray-700 mb-2">
+                            Cantidad <span id="quantity-label" class="text-gray-400 font-normal">(unidades)</span>
+                        </label>
+                        <div class="flex items-center gap-3">
+                            <button type="button" id="qty-minus" class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors duration-200 font-bold text-lg">
+                                −
+                            </button>
+                            <input type="number" id="detail-quantity" value="1" min="1" max="{{ wine.stock }}"
+                                   class="w-20 text-center px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-800 focus:border-red-800 text-lg font-bold">
+                            <button type="button" id="qty-plus" class="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors duration-200 font-bold text-lg">
+                                +
+                            </button>
+                            <span id="qty-hint" class="text-sm text-gray-500"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Precio unitario:</span>
+                            <span class="font-semibold">S/ {{ "%.2f"|format(wine.price) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center mt-2 text-lg">
+                            <span class="font-bold text-gray-900">Total:</span>
+                            <span id="detail-total" class="text-2xl font-bold text-red-800">S/ {{ "%.2f"|format(wine.price) }}</span>
+                        </div>
+                    </div>
+
+                    <button type="button" id="detail-add-to-cart"
+                            class="w-full bg-gradient-to-r from-red-800 to-red-900 text-white px-6 py-4 rounded-lg hover:from-red-900 hover:to-red-950 font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+                            data-wine-id="{{ wine.id }}">
+                        <svg class="w-5 h-5 inline-block mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
                         Agregar al Carrito
                     </button>
-                </form>
+                </div>
+
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const winePrice = {{ wine.price }};
+                    const maxStock = {{ wine.stock }};
+                    const modeBtns = document.querySelectorAll('.purchase-mode');
+                    const qtyInput = document.getElementById('detail-quantity');
+                    const qtyMinus = document.getElementById('qty-minus');
+                    const qtyPlus = document.getElementById('qty-plus');
+                    const qtyHint = document.getElementById('qty-hint');
+                    const qtyLabel = document.getElementById('quantity-label');
+                    const totalEl = document.getElementById('detail-total');
+                    const addBtn = document.getElementById('detail-add-to-cart');
+                    let currentMode = 'unit';
+
+                    function updateDisplay() {
+                        const qty = parseInt(qtyInput.value) || 1;
+                        const isBox = currentMode === 'box';
+                        const effectiveQty = isBox ? qty * 12 : qty;
+                        const total = winePrice * effectiveQty;
+
+                        qtyLabel.textContent = isBox ? '(cajas)' : '(unidades)';
+                        qtyHint.textContent = isBox 
+                            ? `= ${qty * 12} unidades (máx: ${Math.floor(maxStock / 12)} cajas)`
+                            : `stock: ${maxStock} unidades`;
+
+                        const maxVal = isBox ? Math.floor(maxStock / 12) : maxStock;
+                        if (qty > maxVal) qtyInput.value = maxVal;
+
+                        totalEl.textContent = `S/ ${total.toFixed(2)}`;
+                    }
+
+                    modeBtns.forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            modeBtns.forEach(b => {
+                                b.classList.remove('bg-red-800', 'text-white', 'shadow-sm');
+                                b.classList.add('text-gray-600');
+                            });
+                            this.classList.add('bg-red-800', 'text-white', 'shadow-sm');
+                            this.classList.remove('text-gray-600');
+                            currentMode = this.dataset.mode;
+                            qtyInput.value = 1;
+                            updateDisplay();
+                        });
+                    });
+
+                    qtyMinus.addEventListener('click', function() {
+                        let val = parseInt(qtyInput.value) || 1;
+                        if (val > 1) qtyInput.value = val - 1;
+                        updateDisplay();
+                    });
+
+                    qtyPlus.addEventListener('click', function() {
+                        let val = parseInt(qtyInput.value) || 1;
+                        const isBox = currentMode === 'box';
+                        const maxVal = isBox ? Math.floor(maxStock / 12) : maxStock;
+                        if (val < maxVal) qtyInput.value = val + 1;
+                        updateDisplay();
+                    });
+
+                    qtyInput.addEventListener('change', function() {
+                        let val = parseInt(this.value) || 1;
+                        const isBox = currentMode === 'box';
+                        const maxVal = isBox ? Math.floor(maxStock / 12) : maxStock;
+                        if (val < 1) val = 1;
+                        if (val > maxVal) val = maxVal;
+                        this.value = val;
+                        updateDisplay();
+                    });
+
+                    addBtn.addEventListener('click', function() {
+                        const wineId = this.dataset.wineId;
+                        const qty = parseInt(qtyInput.value) || 1;
+                        const isBox = currentMode === 'box';
+                        const effectiveQty = isBox ? qty * 12 : qty;
+                        window.CartManager.addToCart(wineId, effectiveQty, isBox);
+                    });
+
+                    updateDisplay();
+                });
+                </script>
                 {% else %}
                 <div class="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg text-center">
                     Producto agotado

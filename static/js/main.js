@@ -39,6 +39,16 @@ const Alerts = {
         });
     },
 
+    warning: (title, text = '') => {
+        return Swal.fire({
+            ...SwalConfig,
+            icon: 'warning',
+            title: title,
+            text: text,
+            confirmButtonText: 'Entendido'
+        });
+    },
+
     confirm: (title, text, confirmText = 'Confirmar', cancelText = 'Cancelar') => {
         return Swal.fire({
             ...SwalConfig,
@@ -89,7 +99,7 @@ const Alerts = {
 // Cart functionality
 const CartManager = {
     // Add item to cart via AJAX
-    addToCart: async function(wineId, quantity = 1) {
+    addToCart: async function(wineId, quantity = 1, isBox = false) {
         try {
             Alerts.loading('Agregando al carrito...', 'Por favor espera');
             
@@ -100,7 +110,8 @@ const CartManager = {
                 },
                 body: JSON.stringify({
                     wine_id: wineId,
-                    quantity: quantity
+                    quantity: quantity,
+                    is_box: isBox
                 })
             });
             
@@ -110,7 +121,8 @@ const CartManager = {
             
             if (data.success) {
                 this.updateCartCount(data.cart_count);
-                Alerts.toast('¡Producto agregado al carrito!', 'success');
+                const label = isBox ? 'caja' : 'unidad';
+                Alerts.toast(`¡Producto agregado al carrito! (1 ${label})`, 'success');
             } else {
                 Alerts.error('Error', data.error || 'No se pudo agregar el producto');
             }
@@ -124,8 +136,6 @@ const CartManager = {
     // Update cart item quantity
     updateQuantity: async function(wineId, quantity) {
         try {
-            Alerts.loading('Actualizando cantidad...', 'Por favor espera');
-            
             const response = await fetch('/cart/update', {
                 method: 'POST',
                 headers: {
@@ -139,18 +149,11 @@ const CartManager = {
             
             const data = await response.json();
             
-            Swal.close();
-            
             if (data.success) {
                 this.updateCartCount(data.cart_count);
                 this.updateCartTotal(data.cart_total);
+                this.updateItemSubtotal(wineId, quantity);
                 Alerts.toast('Cantidad actualizada', 'success');
-                
-                // Recargar la página para actualizar los totales
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-                
                 return true;
             } else {
                 Alerts.error('Error', data.error || 'No se pudo actualizar la cantidad');
@@ -158,7 +161,6 @@ const CartManager = {
             }
         } catch (error) {
             console.error('Error:', error);
-            Swal.close();
             Alerts.error('Error de conexión', 'No se pudo actualizar el carrito');
             return false;
         }
@@ -209,11 +211,27 @@ const CartManager = {
                 
                 Alerts.toast('Producto eliminado del carrito', 'success');
                 
-                // Si no quedan items, recargar la página
+                // Si no quedan items, mostrar carrito vacío
                 if (data.cart_count === 0) {
                     setTimeout(() => {
-                        window.location.reload();
-                    }, 1500);
+                        const cartContainer = document.querySelector('.cart-container');
+                        if (cartContainer) {
+                            cartContainer.innerHTML = `
+                                <div class="text-center py-16 bg-white rounded-xl shadow-lg">
+                                    <div class="max-w-md mx-auto px-4">
+                                        <svg class="w-24 h-24 mx-auto text-gray-300 mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                        </svg>
+                                        <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Tu carrito está vacío</h2>
+                                        <p class="text-gray-600 mb-8">Descubre nuestra selección premium de vinos</p>
+                                        <a href="/wines/catalog" class="inline-block bg-gradient-to-r from-red-800 to-red-900 text-white px-8 py-4 rounded-lg hover:from-red-900 hover:to-red-950 font-bold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105">
+                                            Ver Catálogo
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }, 400);
                 }
             } else {
                 Alerts.error('Error', data.error || 'No se pudo eliminar el producto');
@@ -244,6 +262,18 @@ const CartManager = {
         cartTotalElements.forEach(el => {
             el.textContent = `S/ ${total.toFixed(2)}`;
         });
+    },
+    
+    // Update individual item subtotal
+    updateItemSubtotal: function(wineId, quantity) {
+        const itemContainer = document.querySelector(`[data-wine-id="${wineId}"]`);
+        if (!itemContainer) return;
+        const subtotalEl = itemContainer.querySelector('.item-subtotal');
+        const priceEl = itemContainer.querySelector('.item-price');
+        if (subtotalEl && priceEl) {
+            const price = parseFloat(priceEl.dataset.price);
+            subtotalEl.textContent = `S/ ${(price * quantity).toFixed(2)}`;
+        }
     },
     
     // Show notification (deprecated - usar Alerts.toast)
